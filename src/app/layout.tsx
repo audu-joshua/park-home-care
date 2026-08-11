@@ -19,8 +19,10 @@ export const metadata: Metadata = {
   description:
     "At Park Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
   icons: {
-    icon: "/images/Icon 1.webp",
-    apple: "/images/Icon 1.webp",
+    icon: [
+      { url: "/images/Icon 2.webp", type: "image/webp" },
+    ],
+    apple: "/images/Icon 2.webp",
   },
 };
 
@@ -34,6 +36,10 @@ export default function RootLayout({
       lang="en"
       className={`${playfair.variable} ${jakarta.variable} h-full antialiased scroll-smooth`}
     >
+      <head>
+        <link rel="icon" href="/images/Icon 2.webp" type="image/webp" />
+        <link rel="apple-touch-icon" href="/images/Icon 2.webp" />
+      </head>
       <body className="min-h-full flex flex-col font-sans bg-white text-slate-900 overflow-x-hidden">
         {children}
       </body>
