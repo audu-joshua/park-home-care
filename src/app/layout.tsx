@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: "Park Home Health | Compassionate Care. Like Family.",
   description:
     "At Park Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+  icons: {
+    icon: "/images/Icon 1.webp",
+    apple: "/images/Icon 1.webp",
+  },
 };
 
 export default function RootLayout({
