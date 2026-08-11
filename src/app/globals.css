@@ -18,8 +18,11 @@
   --font-sans: var(--font-jakarta), sans-serif;
 }
 
-html {
+html, body {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
@@ -30,4 +33,25 @@ body {
 
 .font-serif {
   font-family: var(--font-playfair), Georgia, serif;
+}
+
+/* Ensure all interactive buttons, links, and cards show pointer cursor */
+button, a, [role="button"] {
+  cursor: pointer !important;
+}
+
+/* Subtle Scroll & Viewport Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-section {
+  animation: fadeIn 0.8s ease-out forwards;
 }

@@ -1,43 +1,27 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { getBlogs, type BlogPost } from "@/lib/store";
 
 export default function BlogSection() {
-  const articles = [
-    {
-      id: 1,
-      category: "WELLNESS",
-      title: "Understanding the Different Levels of Home Care",
-      snippet:
-        "Navigating the options between companion care, personal care, and specialized medical support for your loved one.",
-      image: "/images/blog_1.jpg",
-    },
-    {
-      id: 2,
-      category: "SAFETY",
-      title: "5 Tips for Preventing Falls at Home",
-      snippet:
-        "Creating a safe environment is crucial for seniors living at home. Learn simple adjustments to prevent accidents.",
-      image: "/images/blog_2.jpg",
-    },
-    {
-      id: 3,
-      category: "CAREGIVING",
-      title: "The Importance of Respite Care for Family Caregivers",
-      snippet:
-        "Why taking a break is essential for your own well-being and how respite services can support your family.",
-      image: "/images/blog_3.jpg",
-    },
-  ];
+  const [articles, setArticles] = useState<BlogPost[]>([]);
+
+  useEffect(() => {
+    const published = getBlogs().filter((b) => b.published);
+    setArticles(published.slice(0, 3));
+  }, []);
 
   return (
     <section id="blog" className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="text-xs font-bold text-[#EE7862] tracking-widest uppercase mb-3 block">
-            INSIGHTS & RESOURCES
+            INSIGHTS &amp; RESOURCES
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081630] tracking-tight">
             The Park Blog
@@ -51,7 +35,7 @@ export default function BlogSection() {
               key={article.id}
               className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
             >
-              {/* Image Container */}
+              {/* Image */}
               <div className="relative h-48 w-full overflow-hidden">
                 <Image
                   src={article.image}
@@ -75,16 +59,27 @@ export default function BlogSection() {
                   </p>
                 </div>
 
-                <a
-                  href="#contact"
+                <Link
+                  href={`/blogs/${article.slug}`}
                   className="inline-flex items-center gap-2 text-xs font-bold text-[#EE7862] group-hover:text-[#081630] uppercase tracking-wider transition-colors"
                 >
                   <span>Read Article</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </a>
+                </Link>
               </div>
             </article>
           ))}
+        </div>
+
+        {/* View all */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/blogs"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-[#081630] border border-[#081630] px-7 py-3 rounded-full hover:bg-[#081630] hover:text-white transition-all duration-300"
+          >
+            View all Articles
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
       </div>

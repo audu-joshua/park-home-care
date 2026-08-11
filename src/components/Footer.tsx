@@ -57,22 +57,32 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-slate-300 font-light">
               <li>
-                <a href="#hero" className="hover:text-white transition-colors">
+                <a href="/" className="hover:text-white transition-colors cursor-pointer">
                   Home
                 </a>
               </li>
               <li>
-                <a href="#about" className="hover:text-white transition-colors">
+                <a href="/about" className="hover:text-white transition-colors cursor-pointer">
                   About Us
                 </a>
               </li>
               <li>
-                <a href="#services" className="hover:text-white transition-colors">
+                <a href="/#services" className="hover:text-white transition-colors cursor-pointer">
                   Services
                 </a>
               </li>
               <li>
-                <a href="#contact" className="hover:text-white transition-colors">
+                <a href="/careers" className="hover:text-white transition-colors cursor-pointer">
+                  Careers
+                </a>
+              </li>
+              <li>
+                <a href="/blogs" className="hover:text-white transition-colors cursor-pointer">
+                  Blog
+                </a>
+              </li>
+              <li>
+                <a href="/#contact" className="hover:text-white transition-colors cursor-pointer">
                   Contact Us
                 </a>
               </li>
@@ -86,17 +96,17 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-slate-300 font-light">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="#" className="hover:text-white transition-colors cursor-pointer">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="#" className="hover:text-white transition-colors cursor-pointer">
                   Terms of Service
                 </a>
               </li>
               <li>
-                <a href="#faq" className="hover:text-white transition-colors">
+                <a href="/#faq" className="hover:text-white transition-colors cursor-pointer">
                   FAQ
                 </a>
               </li>
@@ -111,18 +121,18 @@ export default function Footer() {
             <ul className="space-y-3 text-sm text-slate-300 font-light">
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-[#EE7862] shrink-0 mt-0.5" />
-                <span>123 Healthcare Lane, Suite 100, City, State</span>
+                <span>1312 Forestford court, Raleigh NC 27610</span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-[#EE7862] shrink-0" />
-                <a href="tel:01234567890" className="hover:text-white transition-colors">
-                  0123 456 7890
+                <a href="tel:+19175868217" className="hover:text-white transition-colors cursor-pointer">
+                  +1 (917) 586-8217
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-[#EE7862] shrink-0" />
-                <a href="mailto:hi@contact.com" className="hover:text-white transition-colors">
-                  hi@contact.com
+                <a href="mailto:info@parkhomecare.com" className="hover:text-white transition-colors cursor-pointer">
+                  info@parkhomecare.com
                 </a>
               </li>
             </ul>
@@ -133,11 +143,12 @@ export default function Footer() {
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <p>© 2026 Park Home Health Agency. All rights reserved.</p>
-          <p className="flex items-center gap-1">
-            <span>Designed & Built with</span>
-            <span className="text-[#EE7862]">♥</span>
-            <span>for Park Home Health</span>
-          </p>
+          <a
+            href="/admin/login"
+            className="text-slate-500 hover:text-slate-300 transition-colors text-[11px]"
+          >
+            Admin Portal
+          </a>
         </div>
 
       </div>

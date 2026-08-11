@@ -15,7 +15,7 @@ export default function AboutFounder() {
             </span>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081630] tracking-tight mb-2">
-              Meet Kala Omeiza
+              Meet Kehinde Ajirotutu
             </h2>
 
             <p className="text-[#00F0ED] font-bold text-sm uppercase tracking-wider mb-6">
@@ -42,7 +42,7 @@ export default function AboutFounder() {
             <div className="relative h-96 sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
               <Image
                 src="/images/founder.jpg"
-                alt="Kala Omeiza - Founder & CEO of Park Home Health"
+                alt="Kehinde Ajirotutu - Founder & CEO of Park Home Health"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -51,7 +51,7 @@ export default function AboutFounder() {
               {/* Floating Name Badge */}
               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-100 shadow-lg">
                 <h3 className="font-serif text-xl font-bold text-[#081630]">
-                  Kala Omeiza
+                  Kehinde Ajirotutu
                 </h3>
                 <p className="text-xs font-semibold text-[#EE7862]">
                   Founder & CEO | Park Home Health

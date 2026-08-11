@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Philosophy from "@/components/Philosophy";
-import Services from "@/components/Services";
+import HomeServices from "@/components/HomeServices";
+import Gallery from "@/components/Gallery";
 import AboutFounder from "@/components/AboutFounder";
 import FAQ from "@/components/FAQ";
 import BlogSection from "@/components/BlogSection";
@@ -30,7 +31,8 @@ export default function Home() {
       <main className="flex-1">
         <Hero onOpenConsultation={() => handleOpenConsultation()} />
         <Philosophy />
-        <Services onSelectService={(service) => handleOpenConsultation(service)} />
+        <HomeServices onSelectService={(service) => handleOpenConsultation(service)} />
+        <Gallery />
         <AboutFounder />
         <FAQ />
         <BlogSection />
