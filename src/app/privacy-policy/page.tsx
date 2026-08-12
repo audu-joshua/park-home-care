@@ -30,14 +30,14 @@ export default function PrivacyPolicyPage() {
 
       <main className="flex-1 py-16 bg-[#FAF8F5]">
         <ScrollReveal direction="up">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 sm:p-12">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 sm:p-14 lg:p-16">
             <div className="prose prose-slate prose-lg max-w-none
               prose-headings:font-serif prose-headings:text-[#081630] prose-headings:font-bold
               prose-p:text-slate-700 prose-p:leading-relaxed prose-p:font-light
-              prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4
+              prose-h2:text-2xl prose-h2:mt-14 prose-h2:mb-5 prose-h2:pb-3 prose-h2:border-b prose-h2:border-slate-100
               prose-strong:text-[#081630]
               prose-a:text-[#EE7862] prose-a:no-underline hover:prose-a:underline
-              prose-ul:space-y-1 prose-li:text-slate-700">
+              prose-ul:space-y-2 prose-li:text-slate-700 prose-p:mb-5">
 
               <p>
                 Park Home Health Agency LLC (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or engage our home care services.
