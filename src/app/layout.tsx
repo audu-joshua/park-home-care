@@ -25,7 +25,33 @@ export const metadata: Metadata = {
     ],
     apple: "/images/Icon 1.webp",
   },
+  openGraph: {
+    title: "Park Home Health | Compassionate Care. Like Family.",
+    description:
+      "At Park Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+    url: "/",
+    siteName: "Park Home Health",
+    images: [
+      {
+        url: "/images/Icon 1.webp",
+        width: 1200,
+        height: 630,
+        alt: "Park Home Health logo",
+        type: "image/webp",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Park Home Health | Compassionate Care. Like Family.",
+    description:
+      "At Park Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+    images: ["/images/Icon 1.webp"],
+  },
 };
+
+export const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000");
 
 export default function RootLayout({
   children,
