@@ -24,7 +24,7 @@ export default function BlogSection() {
             INSIGHTS &amp; RESOURCES
           </span>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081630] tracking-tight">
-            The Park Blog
+            The Pack Blog
           </h2>
         </div>
 
