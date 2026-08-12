@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import CtaBanner from "@/components/CtaBanner";
+import ScrollReveal from "@/components/ScrollReveal";
 import {
   HeartHandshake,
   UserCheck,
@@ -181,6 +182,7 @@ export default function ServicesPage() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
             {/* Filter pills */}
+            <ScrollReveal direction="up">
             <div className="flex flex-wrap items-center justify-center gap-2 mb-14">
               {categories.map((cat) => (
                 <button
@@ -196,14 +198,15 @@ export default function ServicesPage() {
                 </button>
               ))}
             </div>
+            </ScrollReveal>
 
             {/* Services Grid (Matches exact HomeServices design) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filtered.map((service, idx) => {
                 const Icon = service.icon;
                 return (
+                  <ScrollReveal key={idx} delay={idx * 70} direction="up">
                   <div
-                    key={idx}
                     className="bg-white rounded-3xl p-7 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1"
                   >
                     <div>
@@ -247,6 +250,7 @@ export default function ServicesPage() {
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   </div>
+                  </ScrollReveal>
                 );
               })}
             </div>
@@ -254,7 +258,9 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <CtaBanner onOpenConsultation={() => handleOpenConsultation()} />
+        <ScrollReveal direction="up">
+          <CtaBanner onOpenConsultation={() => handleOpenConsultation()} />
+        </ScrollReveal>
       </main>
 
       <Footer />

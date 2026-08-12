@@ -7,6 +7,7 @@ import AboutFounder from "@/components/AboutFounder";
 import Philosophy from "@/components/Philosophy";
 import ConsultationModal from "@/components/ConsultationModal";
 import Gallery from "@/components/Gallery";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function AboutPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -31,9 +32,15 @@ export default function AboutPage() {
       </section>
 
       <main className="flex-1">
-        <AboutFounder />
-        <Philosophy />
-        <Gallery />
+        <ScrollReveal>
+          <AboutFounder />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Philosophy />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Gallery />
+        </ScrollReveal>
       </main>
 
       <Footer />

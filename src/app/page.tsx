@@ -12,6 +12,7 @@ import BlogSection from "@/components/BlogSection";
 import CtaBanner from "@/components/CtaBanner";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function Home() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,13 +31,27 @@ export default function Home() {
       {/* Main Content Sections */}
       <main className="flex-1">
         <Hero onOpenConsultation={() => handleOpenConsultation()} />
-        <Philosophy />
-        <HomeServices onSelectService={(service) => handleOpenConsultation(service)} />
-        <Gallery />
-        <AboutFounder />
-        <FAQ />
-        <BlogSection />
-        <CtaBanner onOpenConsultation={() => handleOpenConsultation()} />
+        <ScrollReveal>
+          <Philosophy />
+        </ScrollReveal>
+        <ScrollReveal>
+          <HomeServices onSelectService={(service) => handleOpenConsultation(service)} />
+        </ScrollReveal>
+        <ScrollReveal>
+          <Gallery />
+        </ScrollReveal>
+        <ScrollReveal>
+          <AboutFounder />
+        </ScrollReveal>
+        <ScrollReveal>
+          <FAQ />
+        </ScrollReveal>
+        <ScrollReveal>
+          <BlogSection />
+        </ScrollReveal>
+        <ScrollReveal>
+          <CtaBanner onOpenConsultation={() => handleOpenConsultation()} />
+        </ScrollReveal>
       </main>
 
       {/* Footer */}

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { getJobs, type JobOpening } from "@/lib/store";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function CareersPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -51,6 +52,7 @@ export default function CareersPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
           {/* Why Work With Us */}
+          <ScrollReveal direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
             <span className="text-xs font-bold text-[#EE7862] tracking-widest uppercase mb-3 block">
               WHY PARK HOME HEALTH?
@@ -62,6 +64,7 @@ export default function CareersPage() {
               We value our caregivers as family. Enjoy competitive pay, flexible schedules, ongoing professional development, and a supportive environment.
             </p>
           </div>
+          </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
             {[
@@ -70,18 +73,21 @@ export default function CareersPage() {
               { icon: ShieldCheck, title: "Supportive Leadership", desc: "Direct access to management and 24/7 care coordination support." },
               { icon: Award, title: "Ongoing Training", desc: "Paid orientation, certifications, and career advancement opportunities." },
             ].map(({ icon: Icon, title, desc }, idx) => (
-              <div key={idx} className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-start hover:shadow-md transition-shadow">
+              <ScrollReveal key={idx} delay={idx * 100} direction="up">
+              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-start hover:shadow-md transition-shadow">
                 <div className="p-3 rounded-2xl bg-[#00F0ED]/10 text-[#081630] mb-4">
                   <Icon className="w-6 h-6 text-[#EE7862]" />
                 </div>
                 <h3 className="font-bold text-[#081630] text-lg mb-2">{title}</h3>
                 <p className="text-slate-600 text-sm leading-relaxed">{desc}</p>
               </div>
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Current Openings */}
           {jobs.length > 0 && (
+            <ScrollReveal direction="up">
             <div className="mb-20">
               <div className="text-center max-w-2xl mx-auto mb-12">
                 <span className="text-xs font-bold text-[#00F0ED] tracking-widest uppercase mb-3 block">
@@ -93,8 +99,9 @@ export default function CareersPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {jobs.map((job) => (
-                  <div key={job.id} className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                {jobs.map((job, idx) => (
+                  <ScrollReveal key={job.id} delay={idx * 80} direction="up">
+                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-3">
                         <span className="text-[10px] font-bold text-[#00F0ED] bg-[#00F0ED]/10 border border-[#00F0ED]/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
@@ -129,12 +136,15 @@ export default function CareersPage() {
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
+            </ScrollReveal>
           )}
 
           {/* Quick Application Form */}
+          <ScrollReveal direction="up" delay={100}>
           <div ref={formRef} className="max-w-3xl mx-auto bg-white p-8 sm:p-12 rounded-3xl shadow-xl border border-slate-100 scroll-mt-28">
             <div className="text-center mb-8">
               <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#081630] mb-2">
@@ -210,6 +220,7 @@ export default function CareersPage() {
               </form>
             )}
           </div>
+          </ScrollReveal>
 
         </div>
       </main>

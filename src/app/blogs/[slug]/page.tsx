@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { getBlogBySlug, getBlogs, type BlogPost } from "@/lib/store";
 import { ChevronLeft, Calendar, Tag, ArrowRight, Check, Copy, User, Clock } from "lucide-react";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function BlogDetailPage() {
   const params = useParams();
@@ -117,6 +118,7 @@ export default function BlogDetailPage() {
       {/* Main Article Content */}
       <main className="flex-1 bg-white pt-52 sm:pt-64 lg:pt-80 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal direction="up">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-start">
 
             {/* Sticky Social Share Sidebar */}
@@ -214,10 +216,12 @@ export default function BlogDetailPage() {
             </article>
 
           </div>
+          </ScrollReveal>
         </div>
 
         {/* Related Posts */}
         {related.length > 0 && (
+          <ScrollReveal direction="up" delay={100}>
           <section className="mt-20 pt-16 pb-12 bg-[#FAF8F5] border-t border-slate-200/60">
             <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
               <div className="flex items-center justify-between mb-8">
@@ -247,6 +251,7 @@ export default function BlogDetailPage() {
               </div>
             </div>
           </section>
+          </ScrollReveal>
         )}
       </main>
 

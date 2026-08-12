@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { getBlogs, type BlogPost } from "@/lib/store";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
+import ScrollReveal from "@/components/ScrollReveal";
 
 export default function BlogsPage() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -40,12 +41,14 @@ export default function BlogsPage() {
       <main className="flex-1 py-16 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {posts.length === 0 ? (
-            <p className="text-center text-slate-500 py-20">No posts published yet. Check back soon.</p>
+            <ScrollReveal>
+              <p className="text-center text-slate-500 py-20">No posts published yet. Check back soon.</p>
+            </ScrollReveal>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {posts.map((post) => (
+              {posts.map((post, idx) => (
+                <ScrollReveal key={post.id} delay={idx * 80} direction="up">
                 <article
-                  key={post.id}
                   className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group hover:-translate-y-1"
                 >
                   <div className="relative h-52 w-full overflow-hidden">
@@ -83,6 +86,7 @@ export default function BlogsPage() {
                     </Link>
                   </div>
                 </article>
+                </ScrollReveal>
               ))}
             </div>
           )}
