@@ -31,43 +31,39 @@ export default function BlogSection() {
         {/* Article Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {articles.map((article) => (
-            <article
-              key={article.id}
-              className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group"
-            >
-              {/* Image */}
-              <div className="relative h-48 w-full overflow-hidden">
-                <Image
-                  src={article.image}
-                  alt={article.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              {/* Content */}
-              <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between">
-                <div>
-                  <span className="text-xs font-bold text-[#00F0ED] uppercase tracking-wider mb-2 block">
-                    {article.category}
-                  </span>
-                  <h3 className="font-serif text-xl font-bold text-[#081630] mb-3 group-hover:text-[#EE7862] transition-colors leading-snug">
-                    {article.title}
-                  </h3>
-                  <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
-                    {article.snippet}
-                  </p>
+            <Link key={article.id} href={`/blogs/${article.slug}`} legacyBehavior>
+              <a className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer hover:-translate-y-1">
+                {/* Image */}
+                <div className="relative h-48 w-full overflow-hidden">
+                  <Image
+                    src={article.image}
+                    alt={article.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
                 </div>
 
-                <Link
-                  href={`/blogs/${article.slug}`}
-                  className="inline-flex items-center gap-2 text-xs font-bold text-[#EE7862] group-hover:text-[#081630] uppercase tracking-wider transition-colors"
-                >
-                  <span>Read Article</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
-              </div>
-            </article>
+                {/* Content */}
+                <div className="p-6 sm:p-8 flex flex-col flex-1 justify-between">
+                  <div>
+                    <span className="text-xs font-bold text-[#00F0ED] uppercase tracking-wider mb-2 block">
+                      {article.category}
+                    </span>
+                    <h3 className="font-serif text-xl font-bold text-[#081630] mb-3 group-hover:text-[#EE7862] transition-colors leading-snug">
+                      {article.title}
+                    </h3>
+                    <p className="text-slate-600 text-sm leading-relaxed mb-6 line-clamp-3">
+                      {article.snippet}
+                    </p>
+                  </div>
+
+                  <span className="inline-flex items-center gap-2 text-xs font-bold text-[#EE7862] group-hover:text-[#081630] uppercase tracking-wider transition-colors">
+                    <span>Read Article</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </span>
+                </div>
+              </a>
+            </Link>
           ))}
         </div>
 

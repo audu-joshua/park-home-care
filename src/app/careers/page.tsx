@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { getJobs, type JobOpening } from "@/lib/store";
+import CustomSelect from "@/components/CustomSelect";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function CareersPage() {
@@ -18,6 +19,21 @@ export default function CareersPage() {
   useEffect(() => {
     setJobs(getJobs().filter((j) => j.active));
   }, []);
+
+  const selectOptions = React.useMemo(() => {
+    const base = jobs.map((j) => ({ value: j.title, label: `${j.title} (${j.type})` }));
+    const extras = [
+      { value: "General In-Home Caregiver", label: "General In-Home Caregiver" },
+      { value: "Certified Nursing Assistant (CNA)", label: "Certified Nursing Assistant (CNA)" },
+      { value: "Registered Nurse (RN) / LPN", label: "Registered Nurse (RN) / LPN" },
+    ];
+    const combined = [...base, ...extras];
+    const dedup = new Map<string, { value: string; label: string }>();
+    combined.forEach((o) => {
+      if (!dedup.has(o.value)) dedup.set(o.value, o);
+    });
+    return [{ value: "", label: "Select position..." }, ...Array.from(dedup.values())];
+  }, [jobs]);
 
   const handleApplyClick = (title: string) => {
     setSelectedPos(title);
@@ -189,20 +205,12 @@ export default function CareersPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Position Interested In</label>
-                  <select
-                    required
+                  <CustomSelect
+                    options={selectOptions}
                     value={selectedPos}
-                    onChange={(e) => setSelectedPos(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862] bg-white text-sm"
-                  >
-                    <option value="">Select position...</option>
-                    {jobs.map((j) => (
-                      <option key={j.id} value={j.title}>{j.title} ({j.type})</option>
-                    ))}
-                    <option value="General In-Home Caregiver">General In-Home Caregiver</option>
-                    <option value="Certified Nursing Assistant (CNA)">Certified Nursing Assistant (CNA)</option>
-                    <option value="Registered Nurse (RN) / LPN">Registered Nurse (RN) / LPN</option>
-                  </select>
+                    onChange={(v) => setSelectedPos(v)}
+                    placeholder="Select position..."
+                  />
                 </div>
 
                 <div>

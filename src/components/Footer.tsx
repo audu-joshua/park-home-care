@@ -49,67 +49,68 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
-          <div className="lg:col-span-2 flex flex-col space-y-3">
-            <h4 className="text-[#00F0ED] text-xs font-bold uppercase tracking-wider mb-2">
-              Quick Links
-            </h4>
-            <ul className="space-y-2 text-sm text-slate-300 font-light">
-              <li>
-                <a href="/" className="hover:text-white transition-colors cursor-pointer">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="/about" className="hover:text-white transition-colors cursor-pointer">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="/#services" className="hover:text-white transition-colors cursor-pointer">
-                  Services
-                </a>
-              </li>
-              <li>
-                <a href="/careers" className="hover:text-white transition-colors cursor-pointer">
-                  Careers
-                </a>
-              </li>
-              <li>
-                <a href="/blogs" className="hover:text-white transition-colors cursor-pointer">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="/#contact" className="hover:text-white transition-colors cursor-pointer">
-                  Contact Us
-                </a>
-              </li>
-            </ul>
-          </div>
+          {/* Columns 2+3: Quick Links + Legal grouped for mobile */}
+          <div className="lg:col-span-5 flex flex-row flex-wrap gap-6 md:gap-8">
+            <div className="flex-1 flex flex-col space-y-3">
+              <h4 className="text-[#00F0ED] text-xs font-bold uppercase tracking-wider mb-2">
+                Quick Links
+              </h4>
+              <ul className="space-y-2 text-sm text-slate-300 font-light">
+                <li>
+                  <a href="/" className="hover:text-white transition-colors cursor-pointer">
+                    Home
+                  </a>
+                </li>
+                <li>
+                  <a href="/about" className="hover:text-white transition-colors cursor-pointer">
+                    About Us
+                  </a>
+                </li>
+                <li>
+                  <a href="/#services" className="hover:text-white transition-colors cursor-pointer">
+                    Services
+                  </a>
+                </li>
+                <li>
+                  <a href="/careers" className="hover:text-white transition-colors cursor-pointer">
+                    Careers
+                  </a>
+                </li>
+                <li>
+                  <a href="/blogs" className="hover:text-white transition-colors cursor-pointer">
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a href="/#contact" className="hover:text-white transition-colors cursor-pointer">
+                    Contact Us
+                  </a>
+                </li>
+              </ul>
+            </div>
 
-          {/* Column 3: Legal */}
-          <div className="lg:col-span-3 flex flex-col space-y-3">
-            <h4 className="text-[#00F0ED] text-xs font-bold uppercase tracking-wider mb-2">
-              Legal
-            </h4>
-            <ul className="space-y-2 text-sm text-slate-300 font-light">
-              <li>
-                <a href="/privacy-policy" className="hover:text-white transition-colors cursor-pointer">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="/terms-of-service" className="hover:text-white transition-colors cursor-pointer">
-                  Terms of Service
-                </a>
-              </li>
-              <li>
-                <a href="/#faq" className="hover:text-white transition-colors cursor-pointer">
-                  FAQ
-                </a>
-              </li>
-            </ul>
+            <div className="flex-1 flex flex-col space-y-3">
+              <h4 className="text-[#00F0ED] text-xs font-bold uppercase tracking-wider mb-2">
+                Legal
+              </h4>
+              <ul className="space-y-2 text-sm text-slate-300 font-light">
+                <li>
+                  <a href="/privacy-policy" className="hover:text-white transition-colors cursor-pointer">
+                    Privacy Policy
+                  </a>
+                </li>
+                <li>
+                  <a href="/terms-of-service" className="hover:text-white transition-colors cursor-pointer">
+                    Terms of Service
+                  </a>
+                </li>
+                <li>
+                  <a href="/#faq" className="hover:text-white transition-colors cursor-pointer">
+                    FAQ
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
           {/* Column 4: Contact */}
