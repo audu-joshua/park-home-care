@@ -41,11 +41,11 @@ export default function CtaBanner({ onOpenConsultation }: CtaBannerProps) {
               </button>
 
               <a
-                href="tel:01234567890"
+                href="tel:+19175868217"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 bg-transparent hover:bg-white/10 text-white text-sm font-semibold px-8 py-4 rounded-full border border-white/30 transition-all duration-300"
               >
                 <Phone className="w-4 h-4 text-[#00F0ED]" />
-                <span>0123 456 7890</span>
+                <span>+1 (917) 586-8217</span>
               </a>
             </div>
           </div>

@@ -1,6 +1,5 @@
 import React from "react";
 import Logo from "./Logo";
-import { Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -96,12 +95,12 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-sm text-slate-300 font-light">
               <li>
-                <a href="#" className="hover:text-white transition-colors cursor-pointer">
+                <a href="/privacy-policy" className="hover:text-white transition-colors cursor-pointer">
                   Privacy Policy
                 </a>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors cursor-pointer">
+                <a href="/terms-of-service" className="hover:text-white transition-colors cursor-pointer">
                   Terms of Service
                 </a>
               </li>
@@ -119,18 +118,32 @@ export default function Footer() {
               Contact
             </h4>
             <ul className="space-y-3 text-sm text-slate-300 font-light">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#EE7862] shrink-0 mt-0.5" />
+              <li className="flex items-center gap-3">
+                <span className="w-9 h-9 rounded-full bg-white/5 text-[#EE7862] flex items-center justify-center shrink-0">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                </span>
                 <span>1312 Forestford court, Raleigh NC 27610</span>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#EE7862] shrink-0" />
+              <li className="flex items-center gap-3">
+                <a
+                  href="tel:+19175868217"
+                  className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#00F0ED] hover:text-[#081630] text-[#EE7862] flex items-center justify-center shrink-0 transition-colors"
+                  aria-label="Call us"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/></svg>
+                </a>
                 <a href="tel:+19175868217" className="hover:text-white transition-colors cursor-pointer">
                   +1 (917) 586-8217
                 </a>
               </li>
-              <li className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#EE7862] shrink-0" />
+              <li className="flex items-center gap-3">
+                <a
+                  href="mailto:info@parkhomecare.com"
+                  className="w-9 h-9 rounded-full bg-white/5 hover:bg-[#00F0ED] hover:text-[#081630] text-[#EE7862] flex items-center justify-center shrink-0 transition-colors"
+                  aria-label="Email us"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                </a>
                 <a href="mailto:info@parkhomecare.com" className="hover:text-white transition-colors cursor-pointer">
                   info@parkhomecare.com
                 </a>
@@ -142,13 +155,16 @@ export default function Footer() {
 
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+          <div className="flex items-center gap-3">
+            <a
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 bg-white/8 hover:bg-[#EE7862]/20 border border-white/10 hover:border-[#EE7862]/30 text-slate-400 hover:text-white transition-all duration-200 text-[11px] font-medium px-3 py-1.5 rounded-full"
+            >
+              <svg className="w-3 h-3 fill-current text-[#EE7862]" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              Admin Portal
+            </a>
+          </div>
           <p>© 2026 Park Home Health Agency. All rights reserved.</p>
-          <a
-            href="/admin/login"
-            className="text-slate-500 hover:text-slate-300 transition-colors text-[11px]"
-          >
-            Admin Portal
-          </a>
         </div>
 
       </div>
