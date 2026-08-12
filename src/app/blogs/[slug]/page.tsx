@@ -100,7 +100,7 @@ export default function BlogDetailPage() {
               <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-slate-200 font-medium">
                 <span className="flex items-center gap-1.5 text-[#00F0ED]">
                   <User className="w-4 h-4" />
-                  By Park Editorial Team
+                  By Pack Editorial Team
                 </span>
                 <span className="text-slate-400">•</span>
                 <span className="flex items-center gap-1.5">
@@ -188,10 +188,10 @@ export default function BlogDetailPage() {
               {/* Author / Editorial Card */}
               <div className="mt-14 p-6 sm:p-8 rounded-3xl bg-[#FAF8F5] border border-slate-200/80 flex flex-col sm:flex-row items-center sm:items-start gap-5">
                 <div className="relative w-16 h-16 rounded-full overflow-hidden shrink-0 border-2 border-white shadow-md">
-                  <Image src="/images/Icon 1.webp" alt="Park Home Health" fill className="object-cover bg-[#081630] p-2" />
+                  <Image src="/images/Icon 1.webp" alt="Pack Home Health" fill className="object-cover bg-[#081630] p-2" />
                 </div>
                 <div className="flex-1 text-center sm:text-left">
-                  <h4 className="font-bold text-[#081630] text-base sm:text-lg">Park Home Health Editorial Team</h4>
+                  <h4 className="font-bold text-[#081630] text-base sm:text-lg">Pack Home Health Editorial Team</h4>
                   <p className="text-xs text-[#EE7862] font-semibold uppercase tracking-wider mb-2">Senior Care Specialists &amp; Health Advisors</p>
                   <p className="text-slate-600 text-sm leading-relaxed">
                     Dedicated to providing families in Raleigh, NC with trustworthy advice, compassionate guidance, and clinical insight on senior care and independent living.
