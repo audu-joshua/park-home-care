@@ -43,7 +43,7 @@ const SEED_BLOGS: BlogPost[] = [
       <h2>Specialized Care</h2>
       <p>Specialized care addresses complex conditions such as Alzheimer's, Parkinson's disease, stroke recovery, or post-surgical healing. Caregivers at this level receive additional training in condition-specific protocols — from wandering prevention to safe transfer techniques — and work closely with the client's medical team.</p>
       <h2>How to Choose</h2>
-      <p>The right level of care is best determined through a comprehensive in-home assessment. At Park Home Health, our care coordinators evaluate your loved one's medical history, daily routines, emotional needs, and home environment to build a personalized plan that evolves as needs change.</p>
+      <p>The right level of care is best determined through a comprehensive in-home assessment. At Pack Home Health, our care coordinators evaluate your loved one's medical history, daily routines, emotional needs, and home environment to build a personalized plan that evolves as needs change.</p>
       <p>Contact us today to schedule your free, no-obligation care assessment.</p>
     `,
     image: "/images/blog_1.jpg",
@@ -91,7 +91,7 @@ const SEED_BLOGS: BlogPost[] = [
       <h2>Benefits of Respite</h2>
       <p>Studies show that family caregivers who use respite services report lower rates of depression, reduced physical health problems, and improved quality of caregiving when they return. Taking a break does not mean abandoning your loved one — it means ensuring you have the capacity to continue caring for them.</p>
       <h2>How We Can Help</h2>
-      <p>At Park Home Health, we offer flexible respite care that matches your loved one's established routine. Our caregivers arrive prepared with full background notes so your family member experiences seamless, familiar care — and you can rest easy knowing they are in expert hands.</p>
+      <p>At Pack Home Health, we offer flexible respite care that matches your loved one's established routine. Our caregivers arrive prepared with full background notes so your family member experiences seamless, familiar care — and you can rest easy knowing they are in expert hands.</p>
     `,
     image: "/images/blog_3.jpg",
     date: "2026-08-05",
@@ -175,7 +175,7 @@ const SEED_JOBS: JobOpening[] = [
 const BLOGS_KEY = "phh_blogs";
 const JOBS_KEY = "phh_jobs";
 const AUTH_KEY = "phh_admin_auth";
-export const ADMIN_PASSWORD = "parkadmin2026";
+export const ADMIN_PASSWORD = "packadmin2026";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
