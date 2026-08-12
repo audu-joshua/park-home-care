@@ -155,7 +155,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-400 gap-4">
           <div className="flex items-center gap-3">
             <a
               href="/admin/login"
@@ -165,7 +165,7 @@ export default function Footer() {
               Admin Portal
             </a>
           </div>
-          <p>© 2026 Park Home Health Agency. All rights reserved.</p>
+          <p>© 2026 Pack Home Health Agency. All rights reserved.</p>
         </div>
 
       </div>

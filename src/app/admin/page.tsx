@@ -265,7 +265,7 @@ export default function AdminDashboard() {
                 <Image src="/images/Icon 1.webp" alt="Logo" fill className="object-contain" />
               </div>
               <div>
-                <p className="font-bold text-sm leading-tight">Park Home Health</p>
+                <p className="font-bold text-sm leading-tight">Pack Home Health</p>
                 <p className="text-[10px] text-slate-400 uppercase tracking-wider">Admin Portal</p>
               </div>
             </div>

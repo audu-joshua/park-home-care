@@ -8,7 +8,7 @@ export default function Head({ params }: { params: { slug: string } }) {
   if (!post) {
     return (
       <>
-        <title>Park Home Health | Blog</title>
+        <title>Pack Home Health | Blog</title>
         <meta name="robots" content="noindex" />
       </>
     );
@@ -19,7 +19,7 @@ export default function Head({ params }: { params: { slug: string } }) {
 
   return (
     <>
-      <title>{post.title} — Park Home Health</title>
+      <title>{post.title} — Pack Home Health</title>
       <meta name="description" content={post.snippet} />
 
       {/* Open Graph */}

@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
               prose-ul:space-y-2 prose-li:text-slate-700 prose-p:mb-5">
 
               <p>
-                Park Home Health Agency LLC (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or engage our home care services.
+                Pack Home Health Agency LLC (&quot;we,&quot; &quot;our,&quot; or &quot;us&quot;) is committed to protecting the privacy and security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or engage our home care services.
               </p>
 
               <h2>1. Information We Collect</h2>
@@ -112,7 +112,7 @@ export default function PrivacyPolicyPage() {
                 If you have any questions or concerns about this Privacy Policy, please contact us:
               </p>
               <ul>
-                <li><strong>Park Home Health Agency LLC</strong></li>
+                <li><strong>Pack Home Health Agency LLC</strong></li>
                 <li>1312 Forestford Court, Raleigh, NC 27610</li>
                 <li>Phone: <a href="tel:+19175868217">+1 (917) 586-8217</a></li>
                 <li>Email: <a href="mailto:info@parkhomecare.com">info@parkhomecare.com</a></li>

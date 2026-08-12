@@ -70,8 +70,8 @@ export default function CareersPage() {
           {/* Why Work With Us */}
           <ScrollReveal direction="up">
           <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-bold text-[#EE7862] tracking-widest uppercase mb-3 block">
-              WHY PARK HOME HEALTH?
+              <span className="text-xs font-bold text-[#EE7862] tracking-widest uppercase mb-3 block">
+              WHY PACK HOME HEALTH?
             </span>
             <h2 className="font-serif text-3xl sm:text-4xl font-bold text-[#081630] mb-4">
               We Support Those Who Care
@@ -176,7 +176,7 @@ export default function CareersPage() {
                 <CheckCircle2 className="w-12 h-12 text-[#EE7862] mx-auto" />
                 <h3 className="font-bold text-xl">Application Received!</h3>
                 <p className="text-sm text-slate-700">
-                  Thank you for applying to Park Home Health. We're excited to review your background and will be in touch shortly!
+                  Thank you for applying to Pack Home Health. We're excited to review your background and will be in touch shortly!
                 </p>
               </div>
             ) : (

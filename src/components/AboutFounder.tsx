@@ -24,7 +24,7 @@ export default function AboutFounder() {
 
             <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
               <p>
-                Park Home Health Agency was founded with a clear and heartfelt mission: to provide high quality, compassionate in-home care that prioritizes the dignity and independence of every client.
+                Pack Home Health Agency was founded with a clear and heartfelt mission: to provide high quality, compassionate in-home care that prioritizes the dignity and independence of every client.
               </p>
 
               <p>
@@ -42,7 +42,7 @@ export default function AboutFounder() {
             <div className="relative h-96 sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
               <Image
                 src="/images/founder.jpg"
-                alt="Kehinde Ajirotutu - Founder & CEO of Park Home Health"
+                alt="Kehinde Ajirotutu - Founder & CEO of Pack Home Health"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -54,7 +54,7 @@ export default function AboutFounder() {
                   Kehinde Ajirotutu
                 </h3>
                 <p className="text-xs font-semibold text-[#EE7862]">
-                  Founder & CEO | Park Home Health
+                  Founder & CEO | Pack Home Health
                 </p>
               </div>
             </div>
