@@ -206,6 +206,41 @@ export function saveBlog(post: BlogPost): void {
   localStorage.setItem(BLOGS_KEY, JSON.stringify(all));
 }
 
+// Async helpers that call server API (fallbacks to local storage on error)
+export async function fetchBlogs(): Promise<BlogPost[]> {
+  if (!isBrowser()) return SEED_BLOGS;
+  try {
+    const res = await fetch("/api/blogs");
+    if (!res.ok) throw new Error("API error");
+    const data = await res.json();
+    return data as BlogPost[];
+  } catch (err) {
+    return getBlogs();
+  }
+}
+
+export async function fetchBlogBySlug(slug: string): Promise<BlogPost | undefined> {
+  try {
+    const all = await fetchBlogs();
+    return all.find((b) => b.slug === slug);
+  } catch (err) {
+    return getBlogBySlug(slug);
+  }
+}
+
+export async function saveBlogRemote(post: BlogPost): Promise<void> {
+  try {
+    await fetch("/api/blogs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(post),
+    });
+  } catch (err) {
+    // fallback to local save
+    saveBlog(post);
+  }
+}
+
 export function deleteBlog(id: string): void {
   const all = getBlogs().filter((b) => b.id !== id);
   localStorage.setItem(BLOGS_KEY, JSON.stringify(all));

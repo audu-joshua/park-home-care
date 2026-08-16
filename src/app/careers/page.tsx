@@ -40,9 +40,34 @@ export default function CareersPage() {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const payload = {
+      firstName: fd.get("firstName")?.toString() || "",
+      lastName: fd.get("lastName")?.toString() || "",
+      phone: fd.get("phone")?.toString() || "",
+      email: fd.get("email")?.toString() || "",
+      position: fd.get("position")?.toString() || selectedPos || "",
+      message: fd.get("message")?.toString() || "",
+    };
+    try {
+      const res = await fetch("/api/applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (res.ok) {
+        setSubmitted(true);
+        form.reset();
+      } else {
+        // simple failure handling
+        alert("Failed to submit application. Please try again.");
+      }
+    } catch (err) {
+      alert("Failed to submit application. Please try again.");
+    }
   };
 
   return (
@@ -184,22 +209,22 @@ export default function CareersPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">First Name</label>
-                    <input required type="text" placeholder="John" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    <input name="firstName" required type="text" placeholder="John" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Last Name</label>
-                    <input required type="text" placeholder="Doe" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    <input name="lastName" required type="text" placeholder="Doe" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Phone Number</label>
-                    <input required type="tel" placeholder="+1 (917) 000-0000" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    <input name="phone" required type="tel" placeholder="+1 (917) 000-0000" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>
-                    <input required type="email" placeholder="john@example.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    <input name="email" required type="email" placeholder="john@example.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
                   </div>
                 </div>
 
@@ -211,11 +236,12 @@ export default function CareersPage() {
                     onChange={(v) => setSelectedPos(v)}
                     placeholder="Select position..."
                   />
+                  <input type="hidden" name="position" value={selectedPos} />
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Brief Summary of Experience</label>
-                  <textarea rows={4} placeholder="Tell us briefly about your caregiving experience and availability..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm"></textarea>
+                  <textarea name="message" rows={4} placeholder="Tell us briefly about your caregiving experience and availability..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm"></textarea>
                 </div>
 
                 <button
