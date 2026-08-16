@@ -188,7 +188,7 @@ export default function Header({ onOpenConsultation }: HeaderProps) {
             {/* Clean Minimal Social / Copyright Row */}
             <div className={`flex items-center justify-center space-x-6 text-xs font-light tracking-wide ${scrolled ? "text-slate-400" : "text-slate-400"}`}>
               <a href="#hero" onClick={() => setMobileMenuOpen(false)} className="hover:text-[#EE7862] transition-colors cursor-pointer">
-                Pack Home Care
+                Pack Home Health Care
               </a>
               <span>•</span>
               <a href="tel:+19175868217" className="hover:text-[#EE7862] transition-colors cursor-pointer">

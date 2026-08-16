@@ -16,9 +16,9 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Pack Home Health | Compassionate Care. Like Family.",
+  title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
   description:
-    "At Pack Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+    "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
   icons: {
     icon: [
       { url: "/images/Icon 1.webp", type: "image/webp" },
@@ -26,17 +26,17 @@ export const metadata: Metadata = {
     apple: "/images/Icon 1.webp",
   },
   openGraph: {
-    title: "Pack Home Health | Compassionate Care. Like Family.",
+    title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
     description:
-      "At Pack Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+      "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
     url: "/",
-    siteName: "Pack Home Health",
+    siteName: "Pack Home Health Care Agency LLC",
     images: [
       {
         url: "/images/Icon 1.webp",
         width: 1200,
         height: 630,
-        alt: "Pack Home Health logo",
+        alt: "Pack Home Health Care Agency LLC logo",
         type: "image/webp",
       },
     ],
@@ -44,9 +44,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Pack Home Health | Compassionate Care. Like Family.",
+    title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
     description:
-      "At Pack Home Health Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
+      "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
     images: ["/images/Icon 1.webp"],
   },
 };

@@ -94,7 +94,7 @@ export default function Hero({ onOpenConsultation }: HeroProps) {
             </h1>
 
             <p className="text-slate-300 text-sm sm:text-base max-w-xl mx-auto mb-7 font-light leading-relaxed">
-              At Pack Home Health LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.
+              At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">

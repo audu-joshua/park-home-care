@@ -23,7 +23,7 @@ export default function AboutPage() {
             OUR STORY & MISSION
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            About Pack Home Health LLC
+            About Pack Home Health Care Agency LLC
           </h1>
           <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             Founded with heart, guided by integrity, and committed to empowering individuals to live safely and independently in the comfort of their homes.

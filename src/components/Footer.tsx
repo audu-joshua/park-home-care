@@ -165,7 +165,7 @@ export default function Footer() {
               Admin Portal
             </a>
           </div>
-          <p>© 2026 Pack Home Health Agency. All rights reserved.</p>
+          <p>© 2026 Pack Home Health Care Agency LLC. All rights reserved.</p>
         </div>
 
       </div>

@@ -40,7 +40,7 @@ export default function BlogsPage() {
             RESOURCES &amp; INSIGHTS
           </span>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6">
-            Pack Home Health Blog
+            Pack Home Health Care Blog
           </h1>
           <p className="text-slate-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed">
             Expert advice, family caregiving guides, health tips, and stories to support you on your care journey.

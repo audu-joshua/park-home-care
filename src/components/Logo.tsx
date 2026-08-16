@@ -14,7 +14,7 @@ export default function Logo({ light = false, className = "" }: LogoProps) {
       <div className="relative w-10 h-10 sm:w-11 sm:h-11 shrink-0 transition-transform duration-300 group-hover:scale-105 group-hover:rotate-2">
         <Image
           src={light ? "/images/Icon 1.webp" : "/images/Icon 2.webp"}
-          alt="Pack Home Health Logo"
+          alt="Pack Home Health Care Agency LLC Logo"
           fill
           className="object-contain"
           priority
@@ -28,7 +28,7 @@ export default function Logo({ light = false, className = "" }: LogoProps) {
             light ? "text-white group-hover:text-[#00F0ED]" : "text-[#081630] group-hover:text-[#EE7862]"
           }`}
         >
-          Pack Home Health
+          Pack Home Health Care
         </span>
       </div>
     </Link>

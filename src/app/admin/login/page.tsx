@@ -48,7 +48,7 @@ export default function AdminLoginPage() {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="relative w-14 h-14">
-              <Image src="/images/Icon 1.webp" alt="Pack Home Health" fill className="object-contain" />
+              <Image src="/images/Icon 1.webp" alt="Pack Home Health Care Agency LLC" fill className="object-contain" />
             </div>
           </div>
 
@@ -57,7 +57,7 @@ export default function AdminLoginPage() {
               <ShieldCheck className="w-3.5 h-3.5" />
               Admin Portal
             </div>
-            <h1 className="font-serif text-2xl font-bold text-white">Pack Home Health</h1>
+            <h1 className="font-serif text-2xl font-bold text-white">Pack Home Health Care</h1>
             <p className="text-slate-400 text-sm mt-1">Sign in to manage content</p>
           </div>
 
