@@ -41,7 +41,7 @@ export default function AboutFounder() {
           <div className="lg:col-span-5 relative">
             <div className="relative h-96 sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
               <Image
-                src="/images/founder.jpg"
+                src="/images/ajirotutu.png"
                 alt="Kehinde Ajirotutu - Founder & CEO of Pack Home Health Care Agency LLC"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"

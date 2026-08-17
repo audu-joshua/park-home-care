@@ -16,39 +16,44 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.packhomehealthcareagency.com"),
   title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
   description:
     "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
   icons: {
     icon: [
-      { url: "/images/Icon 1.webp", type: "image/webp" },
+      { url: "/favicon-48x48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
     ],
-    apple: "/images/Icon 1.webp",
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-icon.png", sizes: "180x180", type: "image/png" },
+    ],
   },
   openGraph: {
     title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
     description:
       "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
-    url: "/",
+    url: "https://www.packhomehealthcareagency.com",
     siteName: "Pack Home Health Care Agency LLC",
     images: [
       {
-        url: "/images/Icon 1.webp",
-        width: 1200,
-        height: 630,
-        alt: "Pack Home Health Care Agency LLC logo",
-        type: "image/webp",
+        url: "/icon-512x512.png",
+        width: 512,
+        height: 512,
+        alt: "Pack Home Health Care Agency LLC Logo",
+        type: "image/png",
       },
     ],
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
     description:
       "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
-    images: ["/images/Icon 1.webp"],
+    images: ["/icon-512x512.png"],
   },
 };
 
@@ -63,8 +68,11 @@ export default function RootLayout({
       className={`${playfair.variable} ${jakarta.variable} h-full antialiased scroll-smooth`}
     >
       <head>
-        <link rel="icon" href="/images/Icon 1.webp" type="image/webp" />
-        <link rel="apple-touch-icon" href="/images/Icon 1.webp" />
+        <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png" />
+        <link rel="icon" href="/icon.png" sizes="192x192" type="image/png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-icon.png" sizes="180x180" />
       </head>
       <body className="min-h-full flex flex-col font-sans bg-white text-slate-900 overflow-x-hidden">
         {children}
