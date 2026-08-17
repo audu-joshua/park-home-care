@@ -1,43 +1,34 @@
-// ─── Types ────────────────────────────────────────────────────────────────────
+/*
+  Migration script to insert seed blogs and jobs into MongoDB.
+  Usage: set MONGODB_URI env var, then run:
+    node scripts/migrateSeed.js
 
-export interface BlogPost {
-  id: string;
-  slug: string;
-  title: string;
-  category: string;
-  snippet: string;
-  content: string; // HTML string
-  image: string;
-  date: string;
-  published: boolean;
+  Note: This script expects `MONGODB_URI` to be set. It will not use .env.local automatically.
+*/
+const { MongoClient } = require("mongodb");
+const fs = require("fs");
+
+// If MONGODB_URI isn't set in the environment, attempt to load from .env.local
+if (!process.env.MONGODB_URI) {
+  try {
+    const env = fs.readFileSync(".env.local", "utf8");
+    env.split(/\r?\n/).forEach((line) => {
+      const m = line.match(/^([^#=]+)=(.*)$/);
+      if (m) process.env[m[1].trim()] = m[2].trim();
+    });
+    console.log("Loaded env from .env.local");
+  } catch (e) {
+    // ignore if file not present
+  }
 }
 
-export interface JobOpening {
-  id: string;
-  title: string;
-  department: string;
-  type: "Full-Time" | "Part-Time" | "Flexible";
-  location: string;
-  description: string;
-  requirements: string[];
-  posted: string;
-  active: boolean;
+const uri = process.env.MONGODB_URI;
+if (!uri) {
+  console.error("Please set MONGODB_URI environment variable before running this script.");
+  process.exit(1);
 }
 
-export interface JobApplication {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  position: string;
-  message: string;
-  createdAt: string;
-}
-
-// ─── Seed Data ────────────────────────────────────────────────────────────────
-
-const SEED_BLOGS: BlogPost[] = [
+const SEED_BLOGS = [
   {
     id: "1",
     slug: "understanding-levels-of-home-care",
@@ -110,7 +101,7 @@ const SEED_BLOGS: BlogPost[] = [
   },
 ];
 
-const SEED_JOBS: JobOpening[] = [
+const SEED_JOBS = [
   {
     id: "1",
     title: "In-Home Caregiver / Companion",
@@ -181,220 +172,28 @@ const SEED_JOBS: JobOpening[] = [
   },
 ];
 
-// ─── Keys ─────────────────────────────────────────────────────────────────────
-
-const BLOGS_KEY = "phh_blogs";
-const JOBS_KEY = "phh_jobs";
-const AUTH_KEY = "phh_admin_auth";
-export const ADMIN_PASSWORD = "packadmin2026";
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-function isBrowser() {
-  return typeof window !== "undefined";
-}
-
-function omitMongoId<T extends object>(doc: T): T {
-  const copy = { ...doc } as T & { _id?: unknown };
-  delete copy._id;
-  return copy;
-}
-
-function asArray<T extends object>(data: unknown): T[] {
-  if (!Array.isArray(data)) return [];
-  return (data as T[]).map((item) => omitMongoId(item));
-}
-
-// ─── Blog Store ───────────────────────────────────────────────────────────────
-
-export function getBlogs(): BlogPost[] {
-  if (!isBrowser()) return SEED_BLOGS;
-  const raw = localStorage.getItem(BLOGS_KEY);
-  if (!raw) {
-    localStorage.setItem(BLOGS_KEY, JSON.stringify(SEED_BLOGS));
-    return SEED_BLOGS;
-  }
-  return JSON.parse(raw) as BlogPost[];
-}
-
-export function saveBlog(post: BlogPost): void {
-  const all = getBlogs();
-  const idx = all.findIndex((b) => b.id === post.id);
-  if (idx >= 0) {
-    all[idx] = post;
-  } else {
-    all.unshift(post);
-  }
-  localStorage.setItem(BLOGS_KEY, JSON.stringify(all));
-}
-
-// Async helpers that call server API (fallbacks to local storage on error)
-export async function fetchBlogs(): Promise<BlogPost[]> {
-  if (!isBrowser()) return SEED_BLOGS;
+async function run() {
+  const client = new MongoClient(uri);
   try {
-    const res = await fetch("/api/blogs", { cache: "no-store" });
-    if (!res.ok) throw new Error("API error");
-    const rows = asArray<BlogPost>(await res.json());
-    localStorage.setItem(BLOGS_KEY, JSON.stringify(rows));
-    return rows;
-  } catch {
-    return getBlogs();
+    await client.connect();
+    const db = client.db(process.env.MONGODB_DB || undefined);
+    const blogsCol = db.collection("blogs");
+    const jobsCol = db.collection("jobs");
+
+    console.log("Inserting blogs...");
+    for (const b of SEED_BLOGS) {
+      await blogsCol.updateOne({ id: b.id }, { $set: b }, { upsert: true });
+    }
+    console.log("Inserting jobs...");
+    for (const j of SEED_JOBS) {
+      await jobsCol.updateOne({ id: j.id }, { $set: j }, { upsert: true });
+    }
+    console.log("Migration complete.");
+  } catch (err) {
+    console.error(err);
+  } finally {
+    await client.close();
   }
 }
 
-export async function fetchBlogBySlug(slug: string): Promise<BlogPost | undefined> {
-  try {
-    const all = await fetchBlogs();
-    return all.find((b) => b.slug === slug);
-  } catch {
-    return getBlogBySlug(slug);
-  }
-}
-
-export async function saveBlogRemote(post: BlogPost): Promise<boolean> {
-  const payload = omitMongoId(post);
-  saveBlog(payload);
-  try {
-    const res = await fetch("/api/blogs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-export async function deleteBlogRemote(id: string): Promise<boolean> {
-  deleteBlog(id);
-  try {
-    const res = await fetch("/api/blogs", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-export async function fetchJobs(): Promise<JobOpening[]> {
-  if (!isBrowser()) return SEED_JOBS;
-  try {
-    const res = await fetch("/api/jobs", { cache: "no-store" });
-    if (!res.ok) throw new Error("API error");
-    const rows = asArray<JobOpening>(await res.json());
-    localStorage.setItem(JOBS_KEY, JSON.stringify(rows));
-    return rows;
-  } catch {
-    return getJobs();
-  }
-}
-
-export async function saveJobRemote(job: JobOpening): Promise<boolean> {
-  const payload = omitMongoId(job);
-  saveJob(payload);
-  try {
-    const res = await fetch("/api/jobs", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-export async function deleteJobRemote(id: string): Promise<boolean> {
-  deleteJob(id);
-  try {
-    const res = await fetch("/api/jobs", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
-
-export async function fetchApplications(): Promise<JobApplication[]> {
-  if (!isBrowser()) return [];
-  try {
-    const res = await fetch("/api/applications", { cache: "no-store" });
-    if (!res.ok) throw new Error("API error");
-    const data = await res.json();
-    return asArray<JobApplication>(data);
-  } catch {
-    return [];
-  }
-}
-
-export async function deleteApplicationRemote(id: string): Promise<void> {
-  const res = await fetch("/api/applications", {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
-  });
-  if (!res.ok) throw new Error("Failed to delete application");
-}
-
-export function deleteBlog(id: string): void {
-  const all = getBlogs().filter((b) => b.id !== id);
-  localStorage.setItem(BLOGS_KEY, JSON.stringify(all));
-}
-
-export function getBlogBySlug(slug: string): BlogPost | undefined {
-  return getBlogs().find((b) => b.slug === slug);
-}
-
-// ─── Jobs Store ───────────────────────────────────────────────────────────────
-
-export function getJobs(): JobOpening[] {
-  if (!isBrowser()) return SEED_JOBS;
-  const raw = localStorage.getItem(JOBS_KEY);
-  if (!raw) {
-    localStorage.setItem(JOBS_KEY, JSON.stringify(SEED_JOBS));
-    return SEED_JOBS;
-  }
-  return JSON.parse(raw) as JobOpening[];
-}
-
-export function saveJob(job: JobOpening): void {
-  const all = getJobs();
-  const idx = all.findIndex((j) => j.id === job.id);
-  if (idx >= 0) {
-    all[idx] = job;
-  } else {
-    all.unshift(job);
-  }
-  localStorage.setItem(JOBS_KEY, JSON.stringify(all));
-}
-
-export function deleteJob(id: string): void {
-  const all = getJobs().filter((j) => j.id !== id);
-  localStorage.setItem(JOBS_KEY, JSON.stringify(all));
-}
-
-// ─── Auth Store ───────────────────────────────────────────────────────────────
-
-export function adminLogin(password: string): boolean {
-  if (password === ADMIN_PASSWORD) {
-    sessionStorage.setItem(AUTH_KEY, "1");
-    return true;
-  }
-  return false;
-}
-
-export function adminLogout(): void {
-  sessionStorage.removeItem(AUTH_KEY);
-}
-
-export function isAdminLoggedIn(): boolean {
-  if (!isBrowser()) return false;
-  return sessionStorage.getItem(AUTH_KEY) === "1";
-}
+run();

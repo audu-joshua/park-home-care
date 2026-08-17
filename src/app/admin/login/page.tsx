@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Eye, EyeOff, Lock, ShieldCheck } from "lucide-react";
-import { adminLogin, isAdminLoggedIn } from "@/lib/store";
+import { isAdminLoggedIn } from "@/lib/store";
 
 export default function AdminLoginPage() {
   const router = useRouter();

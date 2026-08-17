@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
-import { getJobs, type JobOpening } from "@/lib/store";
+import { fetchJobs, getJobs, type JobOpening } from "@/lib/store";
 import CustomSelect from "@/components/CustomSelect";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -17,7 +17,18 @@ export default function CareersPage() {
   const formRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setJobs(getJobs().filter((j) => j.active));
+    let mounted = true;
+    (async () => {
+      try {
+        const all = await fetchJobs();
+        if (!mounted) return;
+        setJobs(all.filter((j) => j.active));
+      } catch {
+        if (!mounted) return;
+        setJobs(getJobs().filter((j) => j.active));
+      }
+    })();
+    return () => { mounted = false; };
   }, []);
 
   const selectOptions = React.useMemo(() => {

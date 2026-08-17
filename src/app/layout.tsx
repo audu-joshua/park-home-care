@@ -16,6 +16,7 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   title: "Pack Home Health Care Agency LLC | Compassionate Care. Like Family.",
   description:
     "At Pack Home Health Care Agency LLC, we provide personalized in-home care that helps your loved ones live safely, comfortably, and independently.",
@@ -50,8 +51,6 @@ export const metadata: Metadata = {
     images: ["/images/Icon 1.webp"],
   },
 };
-
-export const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000");
 
 export default function RootLayout({
   children,

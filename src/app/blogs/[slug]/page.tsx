@@ -7,7 +7,7 @@ import { useParams, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
-import { getBlogBySlug, getBlogs, type BlogPost } from "@/lib/store";
+import { fetchBlogBySlug, fetchBlogs, getBlogBySlug, getBlogs, type BlogPost } from "@/lib/store";
 import { ChevronLeft, Calendar, Tag, ArrowRight, Check, Copy, User, Clock } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -22,16 +22,31 @@ export default function BlogDetailPage() {
 
   useEffect(() => {
     const slug = params?.slug as string;
-    const found = getBlogBySlug(slug);
-    if (!found || !found.published) {
-      setNotFound(true);
-      return;
-    }
-    setPost(found);
-    const rel = getBlogs()
-      .filter((b) => b.published && b.slug !== slug)
-      .slice(0, 2);
-    setRelated(rel);
+    let mounted = true;
+    (async () => {
+      try {
+        const found = await fetchBlogBySlug(slug);
+        if (!mounted) return;
+        if (!found || !found.published) {
+          setNotFound(true);
+          return;
+        }
+        setPost(found);
+        const all = await fetchBlogs();
+        if (!mounted) return;
+        setRelated(all.filter((b) => b.published && b.slug !== slug).slice(0, 2));
+      } catch {
+        const found = getBlogBySlug(slug);
+        if (!mounted) return;
+        if (!found || !found.published) {
+          setNotFound(true);
+          return;
+        }
+        setPost(found);
+        setRelated(getBlogs().filter((b) => b.published && b.slug !== slug).slice(0, 2));
+      }
+    })();
+    return () => { mounted = false; };
   }, [params?.slug]);
 
   const handleCopyLink = () => {
