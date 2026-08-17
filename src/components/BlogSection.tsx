@@ -51,8 +51,11 @@ export default function BlogSection() {
             </div>
           ) : (
             articles.map((article) => (
-            <Link key={article.id} href={`/blogs/${article.slug}`} legacyBehavior>
-              <a className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer hover:-translate-y-1">
+              <Link
+                key={article.id}
+                href={`/blogs/${article.slug}`}
+                className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer hover:-translate-y-1"
+              >
                 {/* Image */}
                 <div className="relative h-48 w-full overflow-hidden">
                   <Image
@@ -82,9 +85,9 @@ export default function BlogSection() {
                     <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                   </span>
                 </div>
-              </a>
-            </Link>
-          ))}
+              </Link>
+            ))
+          )}
         </div>
 
         {/* View all */}
