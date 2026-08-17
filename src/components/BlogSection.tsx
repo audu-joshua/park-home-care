@@ -4,14 +4,29 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { getBlogs, type BlogPost } from "@/lib/store";
+import { getBlogs, type BlogPost, fetchBlogs } from "@/lib/store";
+import LoadingLogo from "@/components/LoadingLogo";
 
 export default function BlogSection() {
   const [articles, setArticles] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const published = getBlogs().filter((b) => b.published);
-    setArticles(published.slice(0, 3));
+    let mounted = true;
+    (async () => {
+      try {
+        const all = await fetchBlogs();
+        if (!mounted) return;
+        setArticles(all.filter((b) => b.published).slice(0, 3));
+      } catch (err) {
+        const local = getBlogs().filter((b) => b.published).slice(0, 3);
+        if (!mounted) return;
+        setArticles(local);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
   }, []);
 
   return (
@@ -30,7 +45,12 @@ export default function BlogSection() {
 
         {/* Article Cards Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {articles.map((article) => (
+          {loading ? (
+            <div className="md:col-span-3">
+              <LoadingLogo />
+            </div>
+          ) : (
+            articles.map((article) => (
             <Link key={article.id} href={`/blogs/${article.slug}`} legacyBehavior>
               <a className="bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col group cursor-pointer hover:-translate-y-1">
                 {/* Image */}
