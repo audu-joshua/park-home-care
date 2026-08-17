@@ -24,7 +24,12 @@ function getTransporter() {
 
 export async function sendMail(opts: { to: string | string[]; subject: string; html: string; text?: string }) {
   const t = getTransporter();
-  if (!t) throw new Error("No mail transporter configured");
+  if (!t) {
+    // dev fallback: log the message and return a fake info object
+    console.log("Mail fallback: to=", opts.to, "subject=", opts.subject);
+    console.log(opts.html);
+    return { accepted: Array.isArray(opts.to) ? opts.to : [opts.to], messageId: "dev-fallback" };
+  }
   const info = await t.sendMail({ from: SENDER_EMAIL, to: opts.to, subject: opts.subject, html: opts.html, text: opts.text });
   return info;
 }
