@@ -10,6 +10,7 @@ import { getBlogs, type BlogPost, fetchBlogs } from "@/lib/store";
 import EmptyState from "@/components/EmptyState";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
+import LoadingLogo from "@/components/LoadingLogo";
 
 export default function BlogsPage() {
   const [modalOpen, setModalOpen] = useState(false);
