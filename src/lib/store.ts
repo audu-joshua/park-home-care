@@ -382,19 +382,26 @@ export function deleteJob(id: string): void {
 
 // ─── Auth Store ───────────────────────────────────────────────────────────────
 
-export function adminLogin(password: string): boolean {
-  if (password === ADMIN_PASSWORD) {
+export function adminLogin(email?: string): void {
+  if (isBrowser()) {
     sessionStorage.setItem(AUTH_KEY, "1");
-    return true;
+    if (email) sessionStorage.setItem("phh_admin_email", email);
   }
-  return false;
 }
 
 export function adminLogout(): void {
-  sessionStorage.removeItem(AUTH_KEY);
+  if (isBrowser()) {
+    sessionStorage.removeItem(AUTH_KEY);
+    sessionStorage.removeItem("phh_admin_email");
+  }
 }
 
 export function isAdminLoggedIn(): boolean {
   if (!isBrowser()) return false;
   return sessionStorage.getItem(AUTH_KEY) === "1";
+}
+
+export function getAdminEmail(): string {
+  if (!isBrowser()) return "info@packhomehealthcareagency.com";
+  return sessionStorage.getItem("phh_admin_email") || "info@packhomehealthcareagency.com";
 }
