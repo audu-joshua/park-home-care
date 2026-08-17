@@ -17,19 +17,27 @@ export default function AdminLoginPage() {
     if (isAdminLoggedIn()) router.replace("/admin");
   }, [router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setTimeout(() => {
-      const ok = adminLogin(password);
-      if (ok) {
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        sessionStorage.setItem("phh_admin_auth", "1");
         router.replace("/admin");
       } else {
         setError("Incorrect password. Please try again.");
         setLoading(false);
       }
-    }, 600);
+    } catch (err) {
+      setError("Unexpected error. Try again later.");
+      setLoading(false);
+    }
   };
 
   return (
