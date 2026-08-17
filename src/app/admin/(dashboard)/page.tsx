@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X, Check, Globe } from "lucide-react";
 import {
   fetchBlogs,
   getBlogs,
@@ -39,7 +39,7 @@ function BlogForm({
       content: "",
       image: "/images/blog_1.jpg",
       date: new Date().toISOString().slice(0, 10),
-      published: false,
+      published: true,
     }
   );
 
@@ -54,44 +54,51 @@ function BlogForm({
     <div className="space-y-5">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label className="field-label">Title</label>
-          <input className="field" value={form.title} onChange={(e) => handleTitle(e.target.value)} placeholder="Article title" />
+          <label className="field-label">Article Title</label>
+          <input className="field" value={form.title} onChange={(e) => handleTitle(e.target.value)} placeholder="e.g. 5 Essential Home Care Tips for Seniors" />
         </div>
         <div>
-          <label className="field-label">Slug</label>
-          <input className="field" value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="auto-generated-slug" />
+          <label className="field-label">URL Slug</label>
+          <input className="field font-mono text-xs" value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="5-essential-home-care-tips" />
         </div>
         <div>
           <label className="field-label">Category</label>
-          <input className="field" value={form.category} onChange={(e) => set("category", e.target.value.toUpperCase())} placeholder="e.g. WELLNESS" />
+          <input className="field uppercase" value={form.category} onChange={(e) => set("category", e.target.value.toUpperCase())} placeholder="WELLNESS, SAFETY, CAREGIVING" />
         </div>
         <div>
-          <label className="field-label">Image Path</label>
+          <label className="field-label">Image Path / URL</label>
           <input className="field" value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="/images/blog_1.jpg" />
         </div>
         <div>
-          <label className="field-label">Date</label>
+          <label className="field-label">Publication Date</label>
           <input type="date" className="field" value={form.date} onChange={(e) => set("date", e.target.value)} />
         </div>
         <div className="sm:col-span-2">
-          <label className="field-label">Snippet (shown in cards)</label>
-          <textarea className="field" rows={2} value={form.snippet} onChange={(e) => set("snippet", e.target.value)} placeholder="One-line summary..." />
+          <label className="field-label">Card Snippet (Short Summary)</label>
+          <textarea className="field" rows={2} value={form.snippet} onChange={(e) => set("snippet", e.target.value)} placeholder="Short summary displayed on article cards..." />
         </div>
         <div className="sm:col-span-2">
-          <label className="field-label">Content (HTML)</label>
-          <textarea className="field font-mono text-xs" rows={10} value={form.content} onChange={(e) => set("content", e.target.value)} placeholder="<p>Article body...</p>" />
+          <label className="field-label">Full Content (HTML Supported)</label>
+          <textarea className="field font-mono text-xs" rows={12} value={form.content} onChange={(e) => set("content", e.target.value)} placeholder="<p>Write your article body here...</p>" />
         </div>
-        <div className="flex items-center gap-3">
-          <input type="checkbox" id="pub" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="w-4 h-4 accent-[#EE7862]" />
-          <label htmlFor="pub" className="text-sm text-slate-700 cursor-pointer">Published (visible on site)</label>
+        <div className="sm:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+          <div>
+            <p className="font-bold text-sm text-[#081630]">Visibility Status</p>
+            <p className="text-xs text-slate-500">Choose whether this article is live on the public website.</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="sr-only peer" />
+            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#EE7862]"></div>
+            <span className="ml-3 text-xs font-bold text-slate-700">{form.published ? "Published" : "Draft"}</span>
+          </label>
         </div>
       </div>
 
-      <div className="flex gap-3 pt-2">
-        <button onClick={() => onSave(form)} className="btn-primary flex items-center gap-2">
-          <Save className="w-4 h-4" /> Save Post
+      <div className="flex flex-wrap gap-3 pt-2">
+        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial">
+          <Save className="w-4 h-4" /> Save Article
         </button>
-        <button onClick={onCancel} className="btn-ghost">Cancel</button>
+        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial">Cancel</button>
       </div>
     </div>
   );
@@ -146,12 +153,12 @@ export default function AdminBlogsPage() {
     <>
       {editingBlog !== null ? (
         <>
-          <button onClick={() => setEditingBlog(null)} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Blog Posts
+          <button onClick={() => setEditingBlog(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-6 transition-colors">
+            <ArrowLeft className="w-4 h-4" /> Back to Articles
           </button>
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h2 className="font-bold text-xl text-[#081630] mb-6">
-              {editingBlog === "new" ? "New Blog Post" : "Edit Blog Post"}
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm">
+            <h2 className="font-bold text-xl sm:text-2xl text-[#081630] mb-6">
+              {editingBlog === "new" ? "Create New Article" : "Edit Article"}
             </h2>
             <BlogForm
               key={editingBlog === "new" ? "new" : editingBlog.id}
@@ -163,60 +170,88 @@ export default function AdminBlogsPage() {
         </>
       ) : (
         <>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="font-bold text-2xl text-[#081630]">Blog Posts</h1>
+              <h1 className="font-bold text-2xl text-[#081630]">Blog Articles</h1>
               <p className="text-slate-500 text-sm mt-0.5">
-                {blogs.length} total · {blogs.filter((b) => b.published).length} published
+                {blogs.length} total · {blogs.filter((b) => b.published).length} published live
               </p>
             </div>
-            <button onClick={() => setEditingBlog("new")} className="btn-primary">
-              <Plus className="w-4 h-4" /> New Post
+            <button onClick={() => setEditingBlog("new")} className="btn-primary w-full sm:w-auto">
+              <Plus className="w-4 h-4" /> New Article
             </button>
           </div>
 
           <div className="space-y-4">
             {blogs.map((post) => (
-              <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex gap-4 items-start hover:shadow-md transition-shadow">
-                <div className="relative w-20 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100">
-                  <Image src={post.image} alt={post.title} fill className="object-cover" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${post.published ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
-                      {post.published ? "Published" : "Draft"}
-                    </span>
-                    <span className="text-[10px] font-bold text-[#00F0ED] bg-[#00F0ED]/10 px-2.5 py-0.5 rounded-full uppercase">{post.category}</span>
-                    <span className="text-[10px] text-slate-400">
-                      {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </span>
+              <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                <div className="flex items-start gap-4 min-w-0 w-full sm:w-auto flex-1">
+                  <div className="relative w-20 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200">
+                    <Image src={post.image} alt={post.title} fill className="object-cover" />
                   </div>
-                  <h3 className="font-semibold text-[#081630] text-sm leading-snug truncate">{post.title}</h3>
-                  <p className="text-slate-500 text-xs mt-1 line-clamp-1">{post.snippet}</p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-wrap items-center gap-2 mb-1">
+                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${post.published ? "bg-emerald-100 text-emerald-800 border border-emerald-200" : "bg-amber-100 text-amber-800 border border-amber-200"}`}>
+                        {post.published ? "● Published" : "○ Draft"}
+                      </span>
+                      <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2.5 py-0.5 rounded-full uppercase">{post.category}</span>
+                      <span className="text-[10px] text-slate-400">
+                        {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </span>
+                    </div>
+                    <h3 className="font-bold text-[#081630] text-sm sm:text-base leading-snug line-clamp-1">{post.title}</h3>
+                    <p className="text-slate-500 text-xs mt-0.5 line-clamp-1">{post.snippet}</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                   <button
                     disabled={busy}
                     onClick={() => handleTogglePublished(post)}
-                    title={post.published ? "Unpublish" : "Publish"}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-[#081630] transition-all disabled:opacity-50"
+                    title={post.published ? "Unpublish Article" : "Publish Article"}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      post.published
+                        ? "bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800"
+                        : "bg-[#081630] hover:bg-[#EE7862] text-white"
+                    }`}
                   >
-                    {post.published ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {post.published ? (
+                      <>
+                        <EyeOff className="w-3.5 h-3.5" />
+                        <span>Unpublish</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Publish</span>
+                      </>
+                    )}
                   </button>
-                  <button onClick={() => setEditingBlog(post)} className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-[#081630] transition-all">
+
+                  <button
+                    onClick={() => setEditingBlog(post)}
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
+                    title="Edit Post"
+                  >
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => setDeleteId(post.id)} className="p-2 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all">
+
+                  <button
+                    onClick={() => setDeleteId(post.id)}
+                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-all cursor-pointer"
+                    title="Delete Post"
+                  >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             ))}
+
             {blogs.length === 0 && (
               <EmptyState
-                title="No blog posts"
-                description="Create your first post to publish on the site."
-                action={<button onClick={() => setEditingBlog("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Post</button>}
+                title="No blog posts yet"
+                description="Create your first article to publish on the site."
+                action={<button onClick={() => setEditingBlog("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Article</button>}
               />
             )}
           </div>
@@ -225,22 +260,24 @@ export default function AdminBlogsPage() {
 
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center relative">
             <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
-            <Trash2 className="w-10 h-10 text-red-400 mx-auto mb-4" />
-            <h3 className="font-bold text-lg text-[#081630] mb-2">Are you sure?</h3>
-            <p className="text-slate-500 text-sm mb-6">This will permanently delete this blog post. This cannot be undone.</p>
+            <div className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-lg text-[#081630] mb-2">Delete this article?</h3>
+            <p className="text-slate-500 text-xs sm:text-sm mb-6">This will permanently delete this blog post from your website. This action cannot be undone.</p>
             <div className="flex gap-3 justify-center">
               <button
                 disabled={busy}
                 onClick={() => handleDelete(deleteId)}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex-1"
               >
                 Delete
               </button>
-              <button onClick={() => setDeleteId(null)} className="btn-ghost">Cancel</button>
+              <button onClick={() => setDeleteId(null)} className="btn-ghost flex-1">Cancel</button>
             </div>
           </div>
         </div>

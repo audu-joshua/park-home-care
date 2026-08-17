@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X, MapPin, Briefcase } from "lucide-react";
 import {
   fetchJobs,
   getJobs,
@@ -28,7 +28,7 @@ function JobForm({
     initial ?? {
       id: uid(),
       title: "",
-      department: "",
+      department: "Caregiving",
       type: "Full-Time",
       location: "Raleigh, NC",
       description: "",
@@ -54,14 +54,14 @@ function JobForm({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
           <label className="field-label">Job Title</label>
-          <input className="field" value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Certified Nursing Assistant" />
+          <input className="field" value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Certified Nursing Assistant (CNA)" />
         </div>
         <div>
           <label className="field-label">Department</label>
-          <input className="field" value={form.department} onChange={(e) => set("department", e.target.value)} placeholder="e.g. Clinical" />
+          <input className="field" value={form.department} onChange={(e) => set("department", e.target.value)} placeholder="e.g. Caregiving, Clinical, Administration" />
         </div>
         <div>
-          <label className="field-label">Type</label>
+          <label className="field-label">Employment Type</label>
           <select className="field bg-white" value={form.type} onChange={(e) => set("type", e.target.value as JobOpening["type"])}>
             <option>Full-Time</option>
             <option>Part-Time</option>
@@ -70,45 +70,52 @@ function JobForm({
         </div>
         <div>
           <label className="field-label">Location</label>
-          <input className="field" value={form.location} onChange={(e) => set("location", e.target.value)} />
+          <input className="field" value={form.location} onChange={(e) => set("location", e.target.value)} placeholder="Raleigh, NC" />
         </div>
         <div>
           <label className="field-label">Date Posted</label>
           <input type="date" className="field" value={form.posted} onChange={(e) => set("posted", e.target.value)} />
         </div>
         <div className="sm:col-span-2">
-          <label className="field-label">Description</label>
-          <textarea className="field" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Role overview..." />
+          <label className="field-label">Role Description</label>
+          <textarea className="field" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Brief summary of duties and responsibilities..." />
         </div>
         <div className="sm:col-span-2">
-          <label className="field-label">Requirements</label>
+          <label className="field-label">Key Requirements</label>
           <div className="space-y-2">
             {form.requirements.map((req, i) => (
               <div key={i} className="flex gap-2">
-                <input className="field flex-1" value={req} onChange={(e) => setReq(i, e.target.value)} placeholder={`Requirement ${i + 1}`} />
+                <input className="field flex-1" value={req} onChange={(e) => setReq(i, e.target.value)} placeholder={`Requirement #${i + 1}`} />
                 {form.requirements.length > 1 && (
-                  <button type="button" onClick={() => removeReq(i)} className="text-slate-400 hover:text-red-500 transition-colors">
+                  <button type="button" onClick={() => removeReq(i)} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
                     <X className="w-4 h-4" />
                   </button>
                 )}
               </div>
             ))}
-            <button type="button" onClick={addReq} className="text-xs text-[#EE7862] font-semibold hover:underline">
-              + Add requirement
+            <button type="button" onClick={addReq} className="text-xs text-[#EE7862] font-bold hover:underline inline-flex items-center gap-1 mt-1">
+              + Add another requirement
             </button>
           </div>
         </div>
-        <div className="flex items-center gap-3">
-          <input type="checkbox" id="active" checked={form.active} onChange={(e) => set("active", e.target.checked)} className="w-4 h-4 accent-[#EE7862]" />
-          <label htmlFor="active" className="text-sm text-slate-700 cursor-pointer">Active (visible on careers page)</label>
+        <div className="sm:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
+          <div>
+            <p className="font-bold text-sm text-[#081630]">Active Status</p>
+            <p className="text-xs text-slate-500">Show this job opening on the careers page for candidates to apply.</p>
+          </div>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} className="sr-only peer" />
+            <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#EE7862]"></div>
+            <span className="ml-3 text-xs font-bold text-slate-700">{form.active ? "Active" : "Hidden"}</span>
+          </label>
         </div>
       </div>
 
-      <div className="flex gap-3 pt-2">
-        <button onClick={() => onSave(form)} className="btn-primary flex items-center gap-2">
-          <Save className="w-4 h-4" /> Save Opening
+      <div className="flex flex-wrap gap-3 pt-2">
+        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial">
+          <Save className="w-4 h-4" /> Save Job Opening
         </button>
-        <button onClick={onCancel} className="btn-ghost">Cancel</button>
+        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial">Cancel</button>
       </div>
     </div>
   );
@@ -163,20 +170,20 @@ export default function AdminJobsPage() {
   };
 
   const typeColor = (t: string) =>
-    t === "Full-Time" ? "bg-emerald-100 text-emerald-700" :
-    t === "Part-Time" ? "bg-blue-100 text-blue-700" :
-    "bg-amber-100 text-amber-700";
+    t === "Full-Time" ? "bg-emerald-100 text-emerald-800 border-emerald-200" :
+    t === "Part-Time" ? "bg-blue-100 text-blue-800 border-blue-200" :
+    "bg-amber-100 text-amber-800 border-amber-200";
 
   return (
     <>
       {editingJob !== null ? (
         <>
-          <button onClick={() => setEditingJob(null)} className="flex items-center gap-2 text-sm text-slate-500 hover:text-slate-800 mb-6 transition-colors">
+          <button onClick={() => setEditingJob(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-6 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Job Openings
           </button>
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-            <h2 className="font-bold text-xl text-[#081630] mb-6">
-              {editingJob === "new" ? "New Job Opening" : "Edit Job Opening"}
+          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm">
+            <h2 className="font-bold text-xl sm:text-2xl text-[#081630] mb-6">
+              {editingJob === "new" ? "Add Job Opening" : "Edit Job Opening"}
             </h2>
             <JobForm
               key={editingJob === "new" ? "new" : editingJob.id}
@@ -188,57 +195,85 @@ export default function AdminJobsPage() {
         </>
       ) : (
         <>
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <div>
               <h1 className="font-bold text-2xl text-[#081630]">Job Openings</h1>
               <p className="text-slate-500 text-sm mt-0.5">
-                {jobs.length} total · {jobs.filter((j) => j.active).length} active
+                {jobs.length} total · {jobs.filter((j) => j.active).length} active listings
               </p>
             </div>
-            <button onClick={() => setEditingJob("new")} className="btn-primary">
+            <button onClick={() => setEditingJob("new")} className="btn-primary w-full sm:w-auto">
               <Plus className="w-4 h-4" /> New Opening
             </button>
           </div>
 
           <div className="space-y-4">
             {jobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-5 shadow-sm flex gap-4 items-start hover:shadow-md transition-shadow">
-                <div className="flex-1 min-w-0">
+              <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+                <div className="flex-1 min-w-0 w-full sm:w-auto">
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${job.active ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>
-                      {job.active ? "Active" : "Inactive"}
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${job.active ? "bg-emerald-100 text-emerald-800 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
+                      {job.active ? "● Active" : "○ Hidden"}
                     </span>
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${typeColor(job.type)}`}>{job.type}</span>
-                    <span className="text-[10px] text-slate-400 uppercase tracking-wider">{job.department}</span>
+                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${typeColor(job.type)}`}>{job.type}</span>
+                    <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2.5 py-0.5 rounded-full uppercase">{job.department}</span>
                   </div>
-                  <h3 className="font-semibold text-[#081630] leading-snug">{job.title}</h3>
-                  <p className="text-slate-500 text-xs mt-1">
-                    {job.location} · Posted {new Date(job.posted).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  <h3 className="font-bold text-[#081630] text-sm sm:text-base leading-snug">{job.title}</h3>
+                  <p className="text-slate-500 text-xs mt-1 flex items-center gap-2 flex-wrap">
+                    <span>📍 {job.location}</span>
+                    <span>•</span>
+                    <span>Posted {new Date(job.posted).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-2 shrink-0">
+
+                <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                   <button
                     disabled={busy}
                     onClick={() => handleToggleActive(job)}
-                    title={job.active ? "Unpublish" : "Publish"}
-                    className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-[#081630] transition-all disabled:opacity-50"
+                    title={job.active ? "Hide Listing" : "Activate Listing"}
+                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      job.active
+                        ? "bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800"
+                        : "bg-[#081630] hover:bg-[#EE7862] text-white"
+                    }`}
                   >
-                    {job.active ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    {job.active ? (
+                      <>
+                        <EyeOff className="w-3.5 h-3.5" />
+                        <span>Deactivate</span>
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Activate</span>
+                      </>
+                    )}
                   </button>
-                  <button onClick={() => setEditingJob(job)} className="p-2 rounded-xl hover:bg-slate-100 text-slate-400 hover:text-[#081630] transition-all">
+
+                  <button
+                    onClick={() => setEditingJob(job)}
+                    className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-all cursor-pointer"
+                    title="Edit Opening"
+                  >
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => setDeleteId(job.id)} className="p-2 rounded-xl hover:bg-red-50 text-slate-400 hover:text-red-500 transition-all">
+
+                  <button
+                    onClick={() => setDeleteId(job.id)}
+                    className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-all cursor-pointer"
+                    title="Delete Opening"
+                  >
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             ))}
+
             {jobs.length === 0 && (
               <EmptyState
-                title="No job openings"
-                description="Add a job opening to make it visible on the careers page."
-                action={<button onClick={() => setEditingJob("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Job</button>}
+                title="No job openings yet"
+                description="Add a job opening to display it on the careers page."
+                action={<button onClick={() => setEditingJob("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Opening</button>}
               />
             )}
           </div>
@@ -247,22 +282,24 @@ export default function AdminJobsPage() {
 
       {deleteId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full text-center relative">
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center relative">
             <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
-            <Trash2 className="w-10 h-10 text-red-400 mx-auto mb-4" />
-            <h3 className="font-bold text-lg text-[#081630] mb-2">Are you sure?</h3>
-            <p className="text-slate-500 text-sm mb-6">This will permanently delete this job opening. This cannot be undone.</p>
+            <div className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto mb-4">
+              <Trash2 className="w-6 h-6" />
+            </div>
+            <h3 className="font-bold text-lg text-[#081630] mb-2">Delete this job opening?</h3>
+            <p className="text-slate-500 text-xs sm:text-sm mb-6">This will permanently remove the position from your website. This action cannot be undone.</p>
             <div className="flex gap-3 justify-center">
               <button
                 disabled={busy}
                 onClick={() => handleDelete(deleteId)}
-                className="bg-red-500 hover:bg-red-600 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50"
+                className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex-1"
               >
                 Delete
               </button>
-              <button onClick={() => setDeleteId(null)} className="btn-ghost">Cancel</button>
+              <button onClick={() => setDeleteId(null)} className="btn-ghost flex-1">Cancel</button>
             </div>
           </div>
         </div>
