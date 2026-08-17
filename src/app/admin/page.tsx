@@ -11,8 +11,10 @@ import {
   isAdminLoggedIn, adminLogout,
   getBlogs, saveBlog, deleteBlog,
   getJobs, saveJob, deleteJob,
+  fetchBlogs, fetchJobs, saveBlogRemote, saveJobRemote, deleteBlogRemote, deleteJobRemote,
   type BlogPost, type JobOpening
 } from "@/lib/store";
+import EmptyState from "@/components/EmptyState";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function uid() {
@@ -191,44 +193,53 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     if (!isAdminLoggedIn()) { router.replace("/admin/login"); return; }
-    setBlogs(getBlogs());
-    setJobs(getJobs());
+    (async () => {
+      try {
+        const [b, j] = await Promise.all([fetchBlogs(), fetchJobs()]);
+        setBlogs(b);
+        setJobs(j);
+      } catch (err) {
+        setBlogs(getBlogs());
+        setJobs(getJobs());
+      }
+    })();
   }, [router]);
 
-  const refreshBlogs = () => setBlogs(getBlogs());
-  const refreshJobs = () => setJobs(getJobs());
+  const refreshBlogs = async () => setBlogs(await fetchBlogs());
+  const refreshJobs = async () => setJobs(await fetchJobs());
 
-  const handleSaveBlog = (post: BlogPost) => {
-    saveBlog(post);
-    refreshBlogs();
+  const handleSaveBlog = async (post: BlogPost) => {
+    await saveBlogRemote(post);
+    await refreshBlogs();
     setEditingBlog(null);
   };
 
-  const handleToggleBlogPublished = (post: BlogPost) => {
-    saveBlog({ ...post, published: !post.published });
-    refreshBlogs();
+  const handleToggleBlogPublished = async (post: BlogPost) => {
+    const updated = { ...post, published: !post.published };
+    await saveBlogRemote(updated);
+    await refreshBlogs();
   };
 
-  const handleDeleteBlog = (id: string) => {
-    deleteBlog(id);
-    refreshBlogs();
+  const handleDeleteBlog = async (id: string) => {
+    await deleteBlogRemote(id);
+    await refreshBlogs();
     setDeleteConfirm(null);
   };
 
-  const handleSaveJob = (job: JobOpening) => {
-    saveJob(job);
-    refreshJobs();
+  const handleSaveJob = async (job: JobOpening) => {
+    await saveJobRemote(job);
+    await refreshJobs();
     setEditingJob(null);
   };
 
-  const handleToggleJobActive = (job: JobOpening) => {
-    saveJob({ ...job, active: !job.active });
-    refreshJobs();
+  const handleToggleJobActive = async (job: JobOpening) => {
+    await saveJobRemote({ ...job, active: !job.active });
+    await refreshJobs();
   };
 
-  const handleDeleteJob = (id: string) => {
-    deleteJob(id);
-    refreshJobs();
+  const handleDeleteJob = async (id: string) => {
+    await deleteJobRemote(id);
+    await refreshJobs();
     setDeleteConfirm(null);
   };
 
@@ -386,7 +397,11 @@ export default function AdminDashboard() {
                       </div>
                     ))}
                     {blogs.length === 0 && (
-                      <div className="text-center py-16 text-slate-400">No blog posts yet. Create your first one!</div>
+                      <EmptyState
+                        title="No blog posts"
+                        description="Create your first post to publish on the site."
+                        action={<button onClick={() => setEditingBlog("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Post</button>}
+                      />
                     )}
                   </div>
                 </>
@@ -453,7 +468,11 @@ export default function AdminDashboard() {
                       </div>
                     ))}
                     {jobs.length === 0 && (
-                      <div className="text-center py-16 text-slate-400">No job openings yet. Add your first one!</div>
+                      <EmptyState
+                        title="No job openings"
+                        description="Add a job opening to make it visible on the careers page."
+                        action={<button onClick={() => setEditingJob("new")} className="btn-primary"><Plus className="w-4 h-4" /> New Job</button>}
+                      />
                     )}
                   </div>
                 </>

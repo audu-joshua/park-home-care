@@ -6,7 +6,8 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
-import { getBlogs, type BlogPost } from "@/lib/store";
+import { getBlogs, type BlogPost, fetchBlogs } from "@/lib/store";
+import EmptyState from "@/components/EmptyState";
 import { ArrowRight, Calendar, Tag } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -15,16 +16,30 @@ export default function BlogsPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [filter, setFilter] = useState<string>("All");
   const [categories, setCategories] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setPosts(getBlogs().filter((b) => b.published));
+    let mounted = true;
+    (async () => {
+      try {
+        const all = await fetchBlogs();
+        if (!mounted) return;
+        const published = all.filter((b) => b.published);
+        setPosts(published);
+        const cats = Array.from(new Set(published.map((p) => p.category))).filter(Boolean);
+        setCategories(cats);
+      } catch (err) {
+        // fallback to local seed
+        const local = getBlogs().filter((b) => b.published);
+        if (!mounted) return;
+        setPosts(local);
+        setCategories(Array.from(new Set(local.map((p) => p.category))).filter(Boolean));
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => { mounted = false; };
   }, []);
-
-  useEffect(() => {
-    const cats = Array.from(new Set(posts.map((p) => p.category))).filter(Boolean);
-    setCategories(cats);
-    if (filter === "All" && cats.length > 0) setFilter("All");
-  }, [posts]);
 
   const displayed = posts.filter((p) => (filter === "All" ? true : p.category === filter));
 
@@ -50,9 +65,13 @@ export default function BlogsPage() {
 
       <main className="flex-1 py-16 bg-[#FAF8F5]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {posts.length === 0 ? (
+          {loading ? (
             <ScrollReveal>
-              <p className="text-center text-slate-500 py-20">No posts published yet. Check back soon.</p>
+              <p className="text-center text-slate-500 py-20">Loading posts…</p>
+            </ScrollReveal>
+          ) : posts.length === 0 ? (
+            <ScrollReveal>
+              <EmptyState title="No blog posts" description="No posts published yet. Check back soon or create one from the admin panel." />
             </ScrollReveal>
           ) : (
             <div>
