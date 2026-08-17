@@ -11,13 +11,14 @@ let transporter: ReturnType<typeof nodemailer.createTransport> | null = null;
 function getTransporter() {
   if (transporter) return transporter;
   if (!SMTP_HOST || !SMTP_PORT || !SMTP_USER || !SMTP_PASS) {
-    console.warn("SMTP not fully configured; mail will fail until env vars are set.");
+    // leave transporter null so caller can fallback to console logging
+    return null as any;
   }
   transporter = nodemailer.createTransport({
     host: SMTP_HOST,
     port: SMTP_PORT,
     secure: SMTP_PORT === 465,
-    auth: SMTP_USER && SMTP_PASS ? { user: SMTP_USER, pass: SMTP_PASS } : undefined,
+    auth: { user: SMTP_USER, pass: SMTP_PASS },
   } as any);
   return transporter;
 }
