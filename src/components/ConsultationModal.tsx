@@ -69,7 +69,19 @@ export default function ConsultationModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    (async () => {
+      try {
+        const res = await fetch("/api/contact", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        });
+        if (res.ok) setSubmitted(true);
+        else setSubmitted(false);
+      } catch (err) {
+        setSubmitted(false);
+      }
+    })();
   };
 
   const handleReset = () => {
