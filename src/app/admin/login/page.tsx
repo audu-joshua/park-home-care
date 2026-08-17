@@ -1,16 +1,19 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Eye, EyeOff, Lock, Mail, ShieldCheck, KeyRound, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, ShieldCheck, KeyRound, ArrowLeft, CheckCircle2, Send } from "lucide-react";
 import { isAdminLoggedIn, adminLogin } from "@/lib/store";
+
+type Mode = "login" | "reset-request" | "reset-confirm";
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"login" | "reset">("login");
-  const [email, setEmail] = useState("info@packhomehealthcareagency.com");
+  const [mode, setMode] = useState<Mode>("login");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState("");
@@ -21,11 +24,18 @@ export default function AdminLoginPage() {
     if (isAdminLoggedIn()) router.replace("/admin");
   }, [router]);
 
+  const resetState = () => {
+    setError("");
+    setSuccessMsg("");
+    setOtp("");
+    setNewPassword("");
+  };
+
+  // ── LOGIN ──────────────────────────────────────────────────────────────────
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    setSuccessMsg("");
     try {
       const res = await fetch("/api/admin/login", {
         method: "POST",
@@ -40,12 +50,40 @@ export default function AdminLoginPage() {
         setError(data.error || "Incorrect email or password. Please try again.");
         setLoading(false);
       }
-    } catch (err) {
+    } catch {
       setError("Unexpected network error. Please try again.");
       setLoading(false);
     }
   };
 
+  // ── STEP 1: REQUEST OTP ────────────────────────────────────────────────────
+  const handleRequestReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/admin/request-reset", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        setSuccessMsg(
+          "If that email is registered, a 6-digit code has been sent to it. Check your inbox."
+        );
+        setMode("reset-confirm");
+      } else {
+        setError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch {
+      setError("Unexpected network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ── STEP 2: SUBMIT OTP + NEW PASSWORD ─────────────────────────────────────
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -55,18 +93,18 @@ export default function AdminLoginPage() {
       const res = await fetch("/api/admin/reset-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, newPassword }),
+        body: JSON.stringify({ email, otp, newPassword }),
       });
       const data = await res.json();
       if (res.ok && data.ok) {
-        setSuccessMsg("Password successfully reset! You can now log in with your new password.");
-        setPassword(newPassword);
+        setSuccessMsg("Password successfully reset! You can now sign in with your new password.");
         setMode("login");
+        setPassword(newPassword);
       } else {
-        setError(data.error || "Failed to reset password. Please verify the email address.");
+        setError(data.error || "Failed to reset password. Please check the code and try again.");
       }
-    } catch (err) {
-      setError("Unexpected error resetting password. Please try again.");
+    } catch {
+      setError("Unexpected error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -74,7 +112,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-[#040C1A] flex items-center justify-center px-4 py-12 relative">
-      {/* Background glowing ambient rings */}
+      {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-white/5" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full border border-white/5" />
@@ -98,24 +136,31 @@ export default function AdminLoginPage() {
             </div>
             <h1 className="font-serif text-2xl font-bold text-white">Pack Home Health Care</h1>
             <p className="text-slate-400 text-xs sm:text-sm mt-1">
-              {mode === "login" ? "Sign in to access your administrative dashboard" : "Reset your account password"}
+              {mode === "login"
+                ? "Sign in to access your administrative dashboard"
+                : mode === "reset-request"
+                ? "Enter your admin email to receive a reset code"
+                : "Enter the code from your email and choose a new password"}
             </p>
           </div>
 
+          {/* Success banner */}
           {successMsg && (
-            <div className="mb-5 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-center gap-2.5">
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+            <div className="mb-5 p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-xs flex items-start gap-2.5">
+              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
               <span>{successMsg}</span>
             </div>
           )}
 
+          {/* Error banner */}
           {error && (
             <div className="mb-5 p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-300 text-xs text-center">
               {error}
             </div>
           )}
 
-          {mode === "login" ? (
+          {/* ── LOGIN FORM ── */}
+          {mode === "login" && (
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">
@@ -126,35 +171,11 @@ export default function AdminLoginPage() {
                   <input
                     type="email"
                     required
-                    placeholder="e.g. info@packhomehealthcareagency.com"
+                    placeholder="Enter your admin email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-500 text-sm outline-none focus:border-[#EE7862] focus:ring-2 focus:ring-[#EE7862]/20 transition-all"
                   />
-                </div>
-                <div className="flex gap-2 mt-2">
-                  <button
-                    type="button"
-                    onClick={() => setEmail("info@packhomehealthcareagency.com")}
-                    className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
-                      email === "info@packhomehealthcareagency.com"
-                        ? "bg-[#00F0ED]/20 text-[#00F0ED] border-[#00F0ED]/40"
-                        : "bg-white/5 text-slate-400 border-white/10 hover:text-white"
-                    }`}
-                  >
-                    info@packhomehealthcareagency.com
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEmail("support@audujoshua.com")}
-                    className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
-                      email === "support@audujoshua.com"
-                        ? "bg-[#00F0ED]/20 text-[#00F0ED] border-[#00F0ED]/40"
-                        : "bg-white/5 text-slate-400 border-white/10 hover:text-white"
-                    }`}
-                  >
-                    support@audujoshua.com
-                  </button>
                 </div>
               </div>
 
@@ -165,10 +186,7 @@ export default function AdminLoginPage() {
                   </label>
                   <button
                     type="button"
-                    onClick={() => {
-                      setMode("reset");
-                      setError("");
-                    }}
+                    onClick={() => { setMode("reset-request"); resetState(); }}
                     className="text-xs text-[#EE7862] hover:underline"
                   >
                     Forgot Password?
@@ -206,21 +224,73 @@ export default function AdminLoginPage() {
                 )}
               </button>
             </form>
-          ) : (
-            <form onSubmit={handleResetPassword} className="space-y-4">
+          )}
+
+          {/* ── STEP 1: REQUEST RESET CODE ── */}
+          {mode === "reset-request" && (
+            <form onSubmit={handleRequestReset} className="space-y-4">
               <div>
                 <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">
-                  Admin Email to Reset
+                  Your Admin Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     type="email"
                     required
-                    placeholder="Select or enter your admin email"
+                    placeholder="Enter your admin email address"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-500 text-sm outline-none focus:border-[#EE7862] focus:ring-2 focus:ring-[#EE7862]/20 transition-all"
+                  />
+                </div>
+                <p className="mt-2 text-[11px] text-slate-500 leading-relaxed">
+                  A 6-digit code will be sent to this address. You must have access to the inbox to continue.
+                </p>
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="flex-1 bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
+                >
+                  {loading ? (
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <><Send className="w-4 h-4" /> Send Reset Code</>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => { setMode("login"); resetState(); }}
+                  className="px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-semibold text-sm transition-all"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* ── STEP 2: ENTER CODE + NEW PASSWORD ── */}
+          {mode === "reset-confirm" && (
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <label className="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1.5">
+                  6-Digit Reset Code
+                </label>
+                <div className="relative">
+                  <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <input
+                    type="text"
+                    required
+                    maxLength={6}
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    placeholder="Enter the code from your email"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
+                    className="w-full pl-11 pr-4 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-500 text-sm outline-none focus:border-[#EE7862] focus:ring-2 focus:ring-[#EE7862]/20 transition-all tracking-widest font-mono text-center"
                   />
                 </div>
               </div>
@@ -230,12 +300,12 @@ export default function AdminLoginPage() {
                   New Password
                 </label>
                 <div className="relative">
-                  <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
                   <input
                     type={showPw ? "text" : "password"}
                     required
                     minLength={6}
-                    placeholder="Enter new password (min 6 chars)"
+                    placeholder="Choose a new password (min 6 chars)"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     className="w-full pl-11 pr-11 py-3.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-slate-500 text-sm outline-none focus:border-[#EE7862] focus:ring-2 focus:ring-[#EE7862]/20 transition-all"
@@ -250,25 +320,23 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-2 pt-1">
                 <button
                   type="submit"
                   disabled={loading}
-                  className="flex-1 bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl shadow-lg transition-all duration-300 flex items-center justify-center gap-2 text-sm cursor-pointer"
+                  className="flex-1 bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-60 text-white font-semibold py-3.5 rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 text-sm cursor-pointer"
                 >
                   {loading ? (
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
-                    "Reset Password"
+                    "Set New Password"
                   )}
                 </button>
                 <button
                   type="button"
-                  onClick={() => {
-                    setMode("login");
-                    setError("");
-                  }}
+                  onClick={() => { setMode("reset-request"); resetState(); }}
                   className="px-4 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 font-semibold text-sm transition-all"
+                  title="Back — resend code"
                 >
                   <ArrowLeft className="w-4 h-4" />
                 </button>
