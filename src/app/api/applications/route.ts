@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
+import { agencyInbox, sendViaResend } from "@/lib/mail";
+import { buildApplicationConfirmHtml } from "@/lib/inboxEmail";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +44,22 @@ export async function POST(req: Request) {
       createdAt: new Date(),
     };
     await col.insertOne(doc);
+
+    const applicantEmail = String(doc.email || "").trim();
+    if (applicantEmail.includes("@")) {
+      const name = `${doc.firstName} ${doc.lastName}`.trim() || "there";
+      try {
+        await sendViaResend({
+          to: [applicantEmail],
+          subject: "We received your application — Pack Home Health Care",
+          html: buildApplicationConfirmHtml({ name, position: doc.position }),
+          replyTo: agencyInbox(),
+        });
+      } catch (mailErr) {
+        console.error("Applicant confirmation failed:", mailErr);
+      }
+    }
+
     return NextResponse.json({ ok: true, id: doc.id }, { status: 201 });
   } catch (err) {
     return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 500 });
