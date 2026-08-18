@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { X, CheckCircle, Phone, ChevronDown, Check } from "lucide-react";
+import { notifyAgencyInbox } from "@/lib/notifyInbox";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -80,8 +81,23 @@ export default function ConsultationModal({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
-        if (res.ok) setSubmitted(true);
-        else setSubmitted(false);
+        if (res.ok) {
+          try {
+            await notifyAgencyInbox(
+              `New Consultation Request: ${formData.service || "General Inquiry"} - ${formData.name}`,
+              {
+                Name: formData.name,
+                Service: formData.service || "General Inquiry",
+                Email: formData.email,
+                Phone: formData.phone,
+                Details: formData.message || "No additional details",
+              }
+            );
+          } catch (mailErr) {
+            console.error("Inbox notify failed:", mailErr);
+          }
+          setSubmitted(true);
+        } else setSubmitted(false);
       } catch {
         setSubmitted(false);
       } finally {

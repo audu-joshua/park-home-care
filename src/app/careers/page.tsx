@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
 import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { fetchJobs, getJobs, type JobOpening } from "@/lib/store";
+import { notifyAgencyInbox, VIEW_APPLICATION_URL } from "@/lib/notifyInbox";
 import CustomSelect from "@/components/CustomSelect";
 import ScrollReveal from "@/components/ScrollReveal";
 
@@ -84,6 +85,21 @@ export default function CareersPage() {
         body: JSON.stringify(payload),
       });
       if (res.ok) {
+        try {
+          await notifyAgencyInbox(
+            `New Application: ${payload.position} - ${payload.firstName} ${payload.lastName}`,
+            {
+              Applicant: `${payload.firstName} ${payload.lastName}`,
+              Position: payload.position,
+              Email: payload.email,
+              Phone: payload.phone,
+              Experience: payload.message || "No summary provided",
+              "View Application": VIEW_APPLICATION_URL,
+            }
+          );
+        } catch (mailErr) {
+          console.error("Inbox notify failed:", mailErr);
+        }
         setSubmitted(true);
         form.reset();
       } else {
