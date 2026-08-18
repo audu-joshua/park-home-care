@@ -6,6 +6,25 @@ function escapeHtml(value: string) {
     .replace(/"/g, "&quot;");
 }
 
+const SITE = "https://www.packhomehealthcareagency.com";
+const LOGO_URL = `${SITE}/icon-512x512.png`;
+
+function emailBrandHeader(eyebrow: string) {
+  return `
+      <div style="background-color:#081630;padding:24px;text-align:center;color:#ffffff;">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto 12px auto;">
+          <tr>
+            <td align="center">
+              <img src="${LOGO_URL}" width="56" height="56" alt="Pack Home Health Care"
+                style="display:block;border:0;outline:none;text-decoration:none;width:56px;height:56px;" />
+            </td>
+          </tr>
+        </table>
+        <h2 style="margin:0;font-size:20px;font-weight:700;">Pack Home Health Care</h2>
+        <p style="margin:4px 0 0 0;font-size:12px;color:#00F0ED;text-transform:uppercase;letter-spacing:1px;">${escapeHtml(eyebrow)}</p>
+      </div>`;
+}
+
 export function buildInboxHtml(subject: string, fields: Record<string, string>) {
   const buttonUrl = fields["View Application"];
   const rows = Object.entries(fields)
@@ -35,10 +54,7 @@ export function buildInboxHtml(subject: string, fields: Record<string, string>) 
 
   return `
     <div style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
-      <div style="background-color:#081630;padding:24px;text-align:center;color:#ffffff;">
-        <h2 style="margin:0;font-size:20px;font-weight:700;">Pack Home Health Care</h2>
-        <p style="margin:4px 0 0 0;font-size:12px;color:#00F0ED;text-transform:uppercase;letter-spacing:1px;">${escapeHtml(subject)}</p>
-      </div>
+      ${emailBrandHeader(subject)}
       <div style="padding:28px;color:#1e293b;">
         <table style="width:100%;border-collapse:collapse;font-size:14px;">${rows}</table>
         ${button}
@@ -58,10 +74,7 @@ export function buildApplicationConfirmHtml(opts: { name: string; position: stri
 
   return `
     <div style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
-      <div style="background-color:#081630;padding:24px;text-align:center;color:#ffffff;">
-        <h2 style="margin:0;font-size:20px;font-weight:700;">Pack Home Health Care</h2>
-        <p style="margin:4px 0 0 0;font-size:12px;color:#00F0ED;text-transform:uppercase;letter-spacing:1px;">Application Received</p>
-      </div>
+      ${emailBrandHeader("Application Received")}
       <div style="padding:28px;color:#1e293b;font-size:14px;line-height:1.6;">
         <p style="margin:0 0 16px;">Hi ${name},</p>
         <p style="margin:0 0 16px;">Thank you for applying for <strong>${position}</strong> at Pack Home Health Care Agency LLC. We have received your application and our team will review it shortly.</p>
