@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { X, CheckCircle, Phone, ChevronDown, Check } from "lucide-react";
 import { notifyAgencyInbox } from "@/lib/notifyInbox";
+import UsPhoneInput from "@/components/UsPhoneInput";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -160,12 +161,10 @@ export default function ConsultationModal({
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">
                     Phone Number
                   </label>
-                  <input
-                    type="tel"
+                  <UsPhoneInput
                     required
-                    placeholder="(555) 000-0000"
                     value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    onChange={(phone) => setFormData({ ...formData, phone })}
                     className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-[#EE7862] focus:ring-2 focus:ring-[#EE7862]/20 text-sm outline-none transition-all"
                   />
                 </div>

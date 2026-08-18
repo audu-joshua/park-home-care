@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { agencyInbox, agencyMailFrom, sendViaResend } from "@/lib/mail";
+import { sendAdminInboxNotice } from "@/lib/mail";
 import { buildInboxHtml } from "@/lib/inboxEmail";
 
 export const dynamic = "force-dynamic";
@@ -16,17 +16,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Missing subject or fields" }, { status: 400 });
     }
 
-    const sent = await sendViaResend({
-      to: [agencyInbox()],
-      from: agencyMailFrom(),
+    await sendAdminInboxNotice({
       subject,
       html: buildInboxHtml(subject, fields),
+      fields,
       replyTo: fields.Email || fields.email,
     });
-
-    if (!sent) {
-      return NextResponse.json({ ok: false, fallback: true }, { status: 501 });
-    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {

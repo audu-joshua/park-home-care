@@ -7,6 +7,7 @@ import ConsultationModal from "@/components/ConsultationModal";
 import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
 import { fetchJobs, getJobs, type JobOpening } from "@/lib/store";
 import CustomSelect from "@/components/CustomSelect";
+import UsPhoneInput from "@/components/UsPhoneInput";
 import ScrollReveal from "@/components/ScrollReveal";
 
 export default function CareersPage() {
@@ -260,7 +261,7 @@ export default function CareersPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Phone Number</label>
-                    <input name="phone" required type="tel" placeholder="+1 (917) 000-0000" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    <UsPhoneInput name="phone" required className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Email Address</label>

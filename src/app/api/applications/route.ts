@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
-import { agencyInbox, agencyMailFrom, sendViaResend, siteUrl } from "@/lib/mail";
+import { agencyInbox, sendAdminInboxNotice, sendViaResend, siteUrl } from "@/lib/mail";
 import { buildApplicationConfirmHtml, buildInboxHtml } from "@/lib/inboxEmail";
 
 export const dynamic = "force-dynamic";
@@ -58,11 +58,10 @@ export async function POST(req: Request) {
     const adminSubject = `New Application: ${doc.position} - ${name}`;
 
     try {
-      await sendViaResend({
-        to: [agencyInbox()],
-        from: agencyMailFrom(),
+      await sendAdminInboxNotice({
         subject: adminSubject,
         html: buildInboxHtml(adminSubject, adminFields),
+        fields: adminFields,
         replyTo: applicantEmail.includes("@") ? applicantEmail : undefined,
       });
     } catch (mailErr) {

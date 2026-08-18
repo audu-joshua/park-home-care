@@ -23,12 +23,25 @@ function extractEmail(value: string) {
   return (match?.[1] || value).trim().toLowerCase();
 }
 
-/** Mail to info@ must not also come from info@ — Outlook often hides those. */
+/** Notices TO info@ use plus-addressing so Microsoft 365 does not hide them as self-mail. */
+export function agencyNotifyTo() {
+  if (process.env.RESEND_NOTIFY_TO) return process.env.RESEND_NOTIFY_TO;
+  const inbox = agencyInbox();
+  const [user, domain] = inbox.split("@");
+  if (!domain || user.includes("+")) return inbox;
+  return `${user}+applications@${domain}`;
+}
+
+/**
+ * Admin notices still come from the verified domain (info@).
+ * onboarding@resend.dev cannot send to info@ until that from-address is used with a verified domain.
+ */
 export function agencyMailFrom() {
-  if (process.env.RESEND_NOTIFY_FROM) return process.env.RESEND_NOTIFY_FROM;
-  const from = process.env.RESEND_FROM || "";
-  const domain = extractEmail(from).split("@")[1] || "packhomehealthcareagency.com";
-  return `Pack Home Health Care <noreply@${domain}>`;
+  return (
+    process.env.RESEND_NOTIFY_FROM ||
+    process.env.RESEND_FROM ||
+    "Pack Home Health Care <info@packhomehealthcareagency.com>"
+  );
 }
 
 // const SMTP_HOST = process.env.SMTP_HOST;
@@ -113,6 +126,39 @@ export async function sendViaResend(opts: {
     throw new Error(data.message || `Resend failed (${res.status})`);
   }
   return true;
+}
+
+export async function sendAdminInboxNotice(opts: {
+  subject: string;
+  html: string;
+  fields: Record<string, string>;
+  replyTo?: string;
+}) {
+  const safeFields = { ...opts.fields };
+  delete safeFields["View Application"];
+
+  try {
+    await sendViaResend({
+      to: [agencyNotifyTo()],
+      from: agencyMailFrom(),
+      subject: opts.subject,
+      html: opts.html,
+      replyTo: opts.replyTo,
+    });
+  } catch (err) {
+    console.error("Resend admin notice failed:", err);
+  }
+
+  try {
+    await deliverToInbox({
+      to: [agencyInbox()],
+      subject: opts.subject,
+      html: opts.html,
+      fields: safeFields,
+    });
+  } catch (err) {
+    console.error("FormSubmit admin notice failed:", err);
+  }
 }
 
 /**
