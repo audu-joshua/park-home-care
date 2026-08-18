@@ -23,18 +23,9 @@ function extractEmail(value: string) {
   return (match?.[1] || value).trim().toLowerCase();
 }
 
-/** Notices TO info@ use plus-addressing so Microsoft 365 does not hide them as self-mail. */
-export function agencyNotifyTo() {
-  if (process.env.RESEND_NOTIFY_TO) return process.env.RESEND_NOTIFY_TO;
-  const inbox = agencyInbox();
-  const [user, domain] = inbox.split("@");
-  if (!domain || user.includes("+")) return inbox;
-  return `${user}+applications@${domain}`;
-}
-
 /**
- * Admin notices still come from the verified domain (info@).
- * onboarding@resend.dev cannot send to info@ until that from-address is used with a verified domain.
+ * Admin notices send from the verified domain (info@) to info@.
+ * Microsoft 365 must allow this as internal spoofing or it will quarantine the message.
  */
 export function agencyMailFrom() {
   return (
@@ -134,30 +125,20 @@ export async function sendAdminInboxNotice(opts: {
   fields: Record<string, string>;
   replyTo?: string;
 }) {
-  const safeFields = { ...opts.fields };
-  delete safeFields["View Application"];
-
   try {
-    await sendViaResend({
-      to: [agencyNotifyTo()],
+    const sent = await sendViaResend({
+      to: [agencyInbox()],
       from: agencyMailFrom(),
       subject: opts.subject,
       html: opts.html,
       replyTo: opts.replyTo,
     });
+    if (!sent) {
+      throw new Error("Resend is not configured");
+    }
   } catch (err) {
     console.error("Resend admin notice failed:", err);
-  }
-
-  try {
-    await deliverToInbox({
-      to: [agencyInbox()],
-      subject: opts.subject,
-      html: opts.html,
-      fields: safeFields,
-    });
-  } catch (err) {
-    console.error("FormSubmit admin notice failed:", err);
+    throw err;
   }
 }
 
