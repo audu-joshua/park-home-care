@@ -15,11 +15,11 @@ export default function AboutFounder() {
             </span>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#081630] tracking-tight mb-2">
-              Meet Kehinde Ajirotutu
+              Meet Kehinde O. Ajirotutu
             </h2>
 
             <p className="text-[#00F0ED] font-bold text-sm uppercase tracking-wider mb-6">
-              Founder & CEO
+              Founder & Director
             </p>
 
             <div className="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
@@ -42,7 +42,7 @@ export default function AboutFounder() {
             <div className="relative h-96 sm:h-[480px] w-full rounded-3xl overflow-hidden shadow-2xl border border-slate-100 group">
               <Image
                 src="/images/ajirotutu.png"
-                alt="Kehinde Ajirotutu - Founder & CEO of Pack Home Health Care Agency LLC"
+                alt="Kehinde O. Ajirotutu - Founder & Director of Pack Home Health Care Agency LLC"
                 fill
                 className="object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -51,10 +51,10 @@ export default function AboutFounder() {
               {/* Floating Name Badge */}
               <div className="absolute bottom-6 left-6 right-6 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-100 shadow-lg">
                 <h3 className="font-serif text-xl font-bold text-[#081630]">
-                  Kehinde Ajirotutu
+                  Kehinde O. Ajirotutu
                 </h3>
                 <p className="text-xs font-semibold text-[#EE7862]">
-                  Founder & CEO | Pack Home Health Care Agency LLC
+                  Founder & Director | Pack Home Health Care Agency LLC
                 </p>
               </div>
             </div>

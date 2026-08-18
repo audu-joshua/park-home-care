@@ -55,3 +55,8 @@ button, a, [role="button"] {
 .fade-in-section {
   animation: fadeIn 0.8s ease-out forwards;
 }
+
+@keyframes shrink-rtl {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}

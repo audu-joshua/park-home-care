@@ -12,6 +12,8 @@ import ScrollReveal from "@/components/ScrollReveal";
 export default function CareersPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [successLeaving, setSuccessLeaving] = useState(false);
   const [jobs, setJobs] = useState<JobOpening[]>([]);
   const [selectedPos, setSelectedPos] = useState("");
   const formRef = useRef<HTMLDivElement>(null);
@@ -30,6 +32,16 @@ export default function CareersPage() {
     })();
     return () => { mounted = false; };
   }, []);
+
+  useEffect(() => {
+    if (!submitted) setSuccessLeaving(false);
+  }, [submitted]);
+
+  const returnToForm = () => {
+    setSuccessLeaving(false);
+    setSubmitted(false);
+    setSelectedPos("");
+  };
 
   const selectOptions = React.useMemo(() => {
     const base = jobs.map((j) => ({ value: j.title, label: `${j.title} (${j.type})` }));
@@ -53,6 +65,7 @@ export default function CareersPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (submitting) return;
     const form = e.currentTarget;
     const fd = new FormData(form);
     const payload = {
@@ -63,6 +76,7 @@ export default function CareersPage() {
       position: fd.get("position")?.toString() || selectedPos || "",
       message: fd.get("message")?.toString() || "",
     };
+    setSubmitting(true);
     try {
       const res = await fetch("/api/applications", {
         method: "POST",
@@ -73,11 +87,12 @@ export default function CareersPage() {
         setSubmitted(true);
         form.reset();
       } else {
-        // simple failure handling
         alert("Failed to submit application. Please try again.");
       }
-    } catch (err) {
+    } catch {
       alert("Failed to submit application. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -208,12 +223,26 @@ export default function CareersPage() {
             </div>
 
             {submitted ? (
-              <div className="bg-[#00F0ED]/10 text-[#081630] p-8 rounded-2xl text-center space-y-3">
+              <div
+                onTransitionEnd={(e) => {
+                  if (e.propertyName === "opacity" && successLeaving) returnToForm();
+                }}
+                className={`relative overflow-hidden bg-[#00F0ED]/10 text-[#081630] p-8 pb-10 rounded-2xl text-center space-y-3 transition-all duration-500 ease-out ${
+                  successLeaving ? "opacity-0 translate-x-8" : "opacity-100 translate-x-0"
+                }`}
+              >
                 <CheckCircle2 className="w-12 h-12 text-[#EE7862] mx-auto" />
                 <h3 className="font-bold text-xl">Application Received!</h3>
                 <p className="text-sm text-slate-700">
                   Thank you for applying to Pack Home Health Care Agency LLC. We're excited to review your background and will be in touch shortly!
                 </p>
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00F0ED]/20 overflow-hidden">
+                  <div
+                    onAnimationEnd={() => setSuccessLeaving(true)}
+                    className="h-full w-full bg-[#EE7862] origin-left"
+                    style={{ animation: "shrink-rtl 5.5s linear forwards" }}
+                  />
+                </div>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -257,10 +286,17 @@ export default function CareersPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-[#EE7862] hover:bg-[#E4644D] text-white font-semibold py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={submitting}
+                  className="w-full bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-wait text-white font-semibold py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span>Submit Application</span>
-                  <ArrowRight className="w-4 h-4" />
+                  {submitting ? (
+                    <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <span>Submit Application</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </>
+                  )}
                 </button>
               </form>
             )}

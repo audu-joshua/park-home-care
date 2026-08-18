@@ -10,9 +10,9 @@ import {
   HeartHandshake,
   UserCheck,
   Brain,
-  Stethoscope,
+  // Stethoscope,
   Activity,
-  Church,
+  // Church,
   Utensils,
   ShieldCheck,
   Home as HomeIcon,
@@ -67,15 +67,15 @@ const services = [
       "Preparation of fresh, heart-healthy meals tailored to dietary restrictions, doctor recommendations, and personal taste preferences.",
     highlights: ["Doctor-guided meal prep", "Hydration monitoring", "Grocery shopping assistance"],
   },
-  {
-    category: "wellness",
-    icon: Church,
-    title: "Spiritual Life & Outings Transport",
-    tagline: "Faith & Community Connection",
-    description:
-      "Reliable, escort-assisted transportation to church services, faith-based gatherings, social events, and family visits — keeping community ties strong.",
-    highlights: ["Church & service transport", "Community outing escort", "Social event accompaniment"],
-  },
+  // {
+  //   category: "wellness",
+  //   icon: Church,
+  //   title: "Spiritual Life & Outings Transport",
+  //   tagline: "Faith & Community Connection",
+  //   description:
+  //     "Reliable, escort-assisted transportation to church services, faith-based gatherings, social events, and family visits — keeping community ties strong.",
+  //   highlights: ["Church & service transport", "Community outing escort", "Social event accompaniment"],
+  // },
   {
     category: "wellness",
     icon: HeartHandshake,
@@ -94,15 +94,15 @@ const services = [
       "Structured daily routines, wandering prevention, behavioral agitation management, and safe cognitive stimulation exercises for memory care clients.",
     highlights: ["Memory-focused routines", "Wandering prevention", "Empathetic behavioral care"],
   },
-  {
-    category: "specialized",
-    icon: Stethoscope,
-    title: "Post-Surgery & Hospital Recovery",
-    tagline: "Smooth In-Home Healing",
-    description:
-      "Mobility transfers, wound care reminders, nutrition tracking, and daily in-home assistance designed to prevent hospital readmission and speed recovery.",
-    highlights: ["Transfer & movement assistance", "Healing nutrition oversight", "Incision monitoring reminders"],
-  },
+  // {
+  //   category: "specialized",
+  //   icon: Stethoscope,
+  //   title: "Post-Surgery & Hospital Recovery",
+  //   tagline: "Smooth In-Home Healing",
+  //   description:
+  //     "Mobility transfers, wound care reminders, nutrition tracking, and daily in-home assistance designed to prevent hospital readmission and speed recovery.",
+  //   highlights: ["Transfer & movement assistance", "Healing nutrition oversight", "Incision monitoring reminders"],
+  // },
   {
     category: "specialized",
     icon: Activity,

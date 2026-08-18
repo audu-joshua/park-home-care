@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { sendMail } from "@/lib/mail";
+import { sendMail, agencyInbox } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     const data = await req.json();
     const { name, email, phone, service, message } = data;
 
-    const adminEmail = process.env.CONTACT_EMAIL || process.env.NOTIFY_EMAIL || "info@packhomehealthcareagency.com";
+    const adminEmail = agencyInbox();
 
     // 1. Send Admin Notification Email
     try {
@@ -56,8 +56,8 @@ export async function POST(req: Request) {
       `;
 
       await sendMail({
-        to: [adminEmail, "info@parkhomecare.com"],
-        subject: `New Consultation Request: ${service || "General Inquiry"} — ${name}`,
+        to: adminEmail,
+        subject: `New Consultation Request: ${service || "General Inquiry"} - ${name}`,
         html: adminHtml,
       });
     } catch (e) {
@@ -109,7 +109,8 @@ export async function POST(req: Request) {
 
         await sendMail({
           to: email,
-          subject: `Consultation Request Received — Pack Home Health Care`,
+          bcc: adminEmail,
+          subject: `Consultation Request Received - Pack Home Health Care`,
           html: clientHtml,
         });
       } catch (e) {

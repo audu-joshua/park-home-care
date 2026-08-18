@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
-import { sendMail } from "@/lib/mail";
+import { sendMail, agencyInbox, AGENCY_EMAIL, siteUrl } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -44,8 +44,9 @@ export async function POST(req: Request) {
     };
     await col.insertOne(doc);
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://park-home-care.vercel.app";
-    const adminEmail = process.env.CONTACT_EMAIL || process.env.NOTIFY_EMAIL || "info@parkhomecare.com";
+    const appUrl = siteUrl();
+    const adminEmail = agencyInbox();
+    const viewApplicationUrl = `${appUrl}/admin/login`;
 
     // 1. Send Notification Email to Admin
     try {
@@ -87,8 +88,8 @@ export async function POST(req: Request) {
             </div>
 
             <div style="text-align: center; margin-top: 28px;">
-              <a href="${appUrl}/admin/applications" style="display: inline-block; background-color: #EE7862; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 12px rgba(238, 120, 98, 0.25);">
-                View Application in Admin Dashboard
+              <a href="${viewApplicationUrl}" style="display: inline-block; background-color: #EE7862; color: #ffffff; font-size: 14px; font-weight: 600; text-decoration: none; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 12px rgba(238, 120, 98, 0.25);">
+                View Application
               </a>
             </div>
           </div>
@@ -99,9 +100,17 @@ export async function POST(req: Request) {
       `;
 
       await sendMail({
-        to: [adminEmail, "info@packhomehealthcareagency.com"],
-        subject: `New Application: ${doc.position} — ${doc.firstName} ${doc.lastName}`,
+        to: adminEmail,
+        subject: `New Application: ${doc.position} - ${doc.firstName} ${doc.lastName}`,
         html: adminHtml,
+        fields: {
+          Applicant: `${doc.firstName} ${doc.lastName}`,
+          Position: doc.position,
+          Email: doc.email,
+          Phone: doc.phone,
+          Experience: doc.message || "No summary provided",
+          "View Application": viewApplicationUrl,
+        },
       });
     } catch (e) {
       console.error("Failed to send admin notification email:", e);
@@ -136,7 +145,7 @@ export async function POST(req: Request) {
               </div>
 
               <p style="font-size: 14px; line-height: 1.6; color: #334155;">
-                If you have any immediate questions, feel free to reach us at <a href="mailto:info@parkhomecare.com" style="color: #EE7862; text-decoration: none; font-weight: 600;">info@parkhomecare.com</a> or call <a href="tel:+19175868217" style="color: #EE7862; text-decoration: none; font-weight: 600;">+1 (917) 586-8217</a>.
+                If you have any immediate questions, feel free to reach us at <a href="mailto:${AGENCY_EMAIL}" style="color: #EE7862; text-decoration: none; font-weight: 600;">${AGENCY_EMAIL}</a> or call <a href="tel:+19175868217" style="color: #EE7862; text-decoration: none; font-weight: 600;">+1 (917) 586-8217</a>.
               </p>
 
               <p style="font-size: 14px; line-height: 1.6; color: #334155; margin-bottom: 0;">
@@ -152,7 +161,7 @@ export async function POST(req: Request) {
 
         await sendMail({
           to: doc.email,
-          subject: `Application Received: ${doc.position} — Pack Home Health Care`,
+          subject: `Application Received: ${doc.position} - Pack Home Health Care`,
           html: applicantHtml,
         });
       } catch (e) {

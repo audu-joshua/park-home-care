@@ -15,10 +15,10 @@ const SERVICE_OPTIONS = [
   "Personal Hygiene & Daily Living",
   "Mobility & Household Management",
   "Nutrition & Custom Meal Planning",
-  "Spiritual Life & Outings Transport",
+  // "Spiritual Life & Outings Transport",
   "Companionship & Mental Well-Being",
   "Alzheimer's & Dementia Memory Care",
-  "Post-Surgery & Hospital Recovery",
+  // "Post-Surgery & Hospital Recovery",
   "Therapy & Chronic Condition Reminders",
   "General Enquiry",
 ];
@@ -29,6 +29,7 @@ export default function ConsultationModal({
   selectedService = "",
 }: ConsultationModalProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -50,6 +51,7 @@ export default function ConsultationModal({
         service: selectedService || "General Enquiry",
       }));
       setSubmitted(false);
+      setSubmitting(false);
       setDropdownOpen(false);
     }
   }, [isOpen, selectedService]);
@@ -69,7 +71,9 @@ export default function ConsultationModal({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (submitting) return;
     (async () => {
+      setSubmitting(true);
       try {
         const res = await fetch("/api/contact", {
           method: "POST",
@@ -78,8 +82,10 @@ export default function ConsultationModal({
         });
         if (res.ok) setSubmitted(true);
         else setSubmitted(false);
-      } catch (err) {
+      } catch {
         setSubmitted(false);
+      } finally {
+        setSubmitting(false);
       }
     })();
   };
@@ -240,10 +246,17 @@ export default function ConsultationModal({
 
               <button
                 type="submit"
-                className="w-full mt-2 bg-[#EE7862] hover:bg-[#E4644D] text-white font-semibold py-3.5 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm cursor-pointer"
+                disabled={submitting}
+                className="w-full mt-2 bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-70 disabled:cursor-wait text-white font-semibold py-3.5 rounded-xl shadow-md transition-colors flex items-center justify-center gap-2 text-sm cursor-pointer"
               >
-                <Phone className="w-4 h-4" />
-                <span>Request Free Consultation</span>
+                {submitting ? (
+                  <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Phone className="w-4 h-4" />
+                    <span>Request Free Consultation</span>
+                  </>
+                )}
               </button>
             </form>
           </div>

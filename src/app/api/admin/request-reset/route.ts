@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
-import { sendMail } from "@/lib/mail";
+import { sendMail, agencyInbox } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -84,8 +84,11 @@ export async function POST(req: Request) {
       "</div>",
     ].join("");
 
+    const inbox = agencyInbox();
+    const recipients = Array.from(new Set([inbox, normEmail]));
+
     await sendMail({
-      to: normEmail,
+      to: recipients,
       subject: "Pack Home Health Admin - Password Reset Code",
       html,
     });

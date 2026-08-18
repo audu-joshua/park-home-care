@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/mongodb";
-import { sendMail } from "@/lib/mail";
+import { sendMail, agencyInbox, AGENCY_EMAIL } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
@@ -74,7 +74,7 @@ export async function POST(req: Request) {
               The password for admin account <strong>${normEmail}</strong> was successfully updated on ${new Date().toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}.
             </p>
             <p style="font-size:13px;color:#64748b;line-height:1.5;">
-              If you did not perform this reset, please contact <a href="mailto:support@audujoshua.com" style="color:#EE7862;">support@audujoshua.com</a> immediately.
+              If you did not perform this reset, please contact <a href="mailto:${AGENCY_EMAIL}" style="color:#EE7862;">${AGENCY_EMAIL}</a> immediately.
             </p>
           </div>
           <div style="background-color:#f1f5f9;padding:16px;text-align:center;font-size:11px;color:#64748b;">
@@ -82,7 +82,7 @@ export async function POST(req: Request) {
           </div>
         </div>
       `;
-      await sendMail({ to: normEmail, subject: "Pack Home Health Admin — Password Changed Successfully", html });
+      await sendMail({ to: agencyInbox(), subject: "Pack Home Health Admin - Password Changed Successfully", html });
     } catch (e) {
       console.error("Failed to send reset confirmation email:", e);
     }
