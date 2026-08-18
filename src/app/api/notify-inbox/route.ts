@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { agencyInbox, sendViaResend } from "@/lib/mail";
+import { agencyInbox, agencyMailFrom, sendViaResend } from "@/lib/mail";
 import { buildInboxHtml } from "@/lib/inboxEmail";
 
 export const dynamic = "force-dynamic";
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
 
     const sent = await sendViaResend({
       to: [agencyInbox()],
+      from: agencyMailFrom(),
       subject,
       html: buildInboxHtml(subject, fields),
       replyTo: fields.Email || fields.email,

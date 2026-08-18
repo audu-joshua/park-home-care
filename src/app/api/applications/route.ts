@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
-import { agencyInbox, sendViaResend } from "@/lib/mail";
-import { buildApplicationConfirmHtml } from "@/lib/inboxEmail";
+import { agencyInbox, agencyMailFrom, sendViaResend, siteUrl } from "@/lib/mail";
+import { buildApplicationConfirmHtml, buildInboxHtml } from "@/lib/inboxEmail";
 
 export const dynamic = "force-dynamic";
 
@@ -46,8 +46,30 @@ export async function POST(req: Request) {
     await col.insertOne(doc);
 
     const applicantEmail = String(doc.email || "").trim();
+    const name = `${doc.firstName} ${doc.lastName}`.trim() || "Applicant";
+    const adminFields = {
+      Applicant: name,
+      Position: doc.position || "Not specified",
+      Email: applicantEmail || "Not provided",
+      Phone: doc.phone || "Not provided",
+      Experience: doc.message || "No summary provided",
+      "View Application": `${siteUrl()}/admin/login`,
+    };
+    const adminSubject = `New Application: ${doc.position} - ${name}`;
+
+    try {
+      await sendViaResend({
+        to: [agencyInbox()],
+        from: agencyMailFrom(),
+        subject: adminSubject,
+        html: buildInboxHtml(adminSubject, adminFields),
+        replyTo: applicantEmail.includes("@") ? applicantEmail : undefined,
+      });
+    } catch (mailErr) {
+      console.error("Admin application notice failed:", mailErr);
+    }
+
     if (applicantEmail.includes("@")) {
-      const name = `${doc.firstName} ${doc.lastName}`.trim() || "there";
       try {
         await sendViaResend({
           to: [applicantEmail],

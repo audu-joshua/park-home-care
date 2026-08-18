@@ -18,6 +18,19 @@ export function agencyInbox() {
   return process.env.CONTACT_EMAIL || process.env.NOTIFY_EMAIL || AGENCY_EMAIL;
 }
 
+function extractEmail(value: string) {
+  const match = value.match(/<([^>]+)>/);
+  return (match?.[1] || value).trim().toLowerCase();
+}
+
+/** Mail to info@ must not also come from info@ — Outlook often hides those. */
+export function agencyMailFrom() {
+  if (process.env.RESEND_NOTIFY_FROM) return process.env.RESEND_NOTIFY_FROM;
+  const from = process.env.RESEND_FROM || "";
+  const domain = extractEmail(from).split("@")[1] || "packhomehealthcareagency.com";
+  return `Pack Home Health Care <noreply@${domain}>`;
+}
+
 // const SMTP_HOST = process.env.SMTP_HOST;
 // const SMTP_PORT = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : undefined;
 // const SMTP_USER = process.env.SMTP_USER;
@@ -63,13 +76,19 @@ export async function sendViaResend(opts: {
   text?: string;
   replyTo?: string;
   bcc?: string[];
+  from?: string;
 }) {
   const key = process.env.RESEND_API_KEY;
   if (!key) return false;
 
-  const from =
+  let from =
+    opts.from ||
     process.env.RESEND_FROM ||
     "Pack Home Health Care <onboarding@resend.dev>";
+  const fromEmail = extractEmail(from);
+  if (!opts.from && opts.to.some((addr) => extractEmail(addr) === fromEmail)) {
+    from = agencyMailFrom();
+  }
 
   const payload: Record<string, unknown> = {
     from,
