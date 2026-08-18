@@ -55,6 +55,47 @@ function toPlainText(html: string) {
     .trim();
 }
 
+/** True HTML email. FormSubmit cannot render buttons — it prints tags as text. */
+export async function sendViaResend(opts: {
+  to: string[];
+  subject: string;
+  html: string;
+  text?: string;
+  replyTo?: string;
+  bcc?: string[];
+}) {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) return false;
+
+  const from =
+    process.env.RESEND_FROM ||
+    "Pack Home Health Care <onboarding@resend.dev>";
+
+  const payload: Record<string, unknown> = {
+    from,
+    to: opts.to,
+    subject: opts.subject,
+    html: opts.html,
+  };
+  if (opts.text) payload.text = opts.text;
+  if (opts.replyTo) payload.reply_to = opts.replyTo;
+  if (opts.bcc?.length) payload.bcc = opts.bcc;
+
+  const res = await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${key}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+  const data = (await res.json().catch(() => ({}))) as { message?: string };
+  if (!res.ok) {
+    throw new Error(data.message || `Resend failed (${res.status})`);
+  }
+  return true;
+}
+
 /**
  * Deliver TO the agency inbox without Microsoft SMTP AUTH.
  * FormSubmit requires Origin/Referer as if the request came from the website.
@@ -77,9 +118,6 @@ async function deliverToInbox(opts: {
       Message: opts.text || toPlainText(opts.html),
     }),
   };
-  if (!opts.fields) {
-    payload["View Application"] = `${origin}/admin/login`;
-  }
 
   const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(inbox)}`, {
     method: "POST",
@@ -116,8 +154,28 @@ export async function sendMail(opts: {
   text?: string;
   bcc?: string | string[];
   fields?: Record<string, string>;
+  replyTo?: string;
 }) {
   const to = (Array.isArray(opts.to) ? opts.to : [opts.to]).filter(Boolean);
+  const bcc = opts.bcc
+    ? (Array.isArray(opts.bcc) ? opts.bcc : [opts.bcc]).filter(Boolean)
+    : undefined;
+
+  try {
+    const sent = await sendViaResend({
+      to,
+      subject: opts.subject,
+      html: opts.html,
+      text: opts.text,
+      replyTo: opts.replyTo,
+      bcc,
+    });
+    if (sent) {
+      return { accepted: to, messageId: "resend", response: "delivered via Resend" };
+    }
+  } catch (err) {
+    console.error("Resend send failed, delivering to agency inbox instead:", err);
+  }
 
   // SMTP is commented out until Microsoft 365 Authenticated SMTP is enabled.
   // const t = getTransporter();
