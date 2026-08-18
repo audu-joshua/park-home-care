@@ -44,7 +44,8 @@ export function buildInboxHtml(subject: string, fields: Record<string, string>) 
         ${button}
       </div>
       <div style="background-color:#f1f5f9;padding:16px;text-align:center;font-size:11px;color:#64748b;">
-        www.packhomehealthcareagency.com
+        www.packhomehealthcareagency.com<br/>
+        <span>PHHC-RESEND</span>
       </div>
     </div>
   `;
