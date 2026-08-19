@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X, Check, Globe } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X } from "lucide-react";
 import {
   fetchBlogs,
   getBlogs,
@@ -51,42 +51,42 @@ function BlogForm({
   };
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="sm:col-span-2">
+    <div className="space-y-4 min-w-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Article Title</label>
           <input className="field" value={form.title} onChange={(e) => handleTitle(e.target.value)} placeholder="e.g. 5 Essential Home Care Tips for Seniors" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">URL Slug</label>
           <input className="field font-mono text-xs" value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="5-essential-home-care-tips" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Category</label>
           <input className="field uppercase" value={form.category} onChange={(e) => set("category", e.target.value.toUpperCase())} placeholder="WELLNESS, SAFETY, CAREGIVING" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Image Path / URL</label>
           <input className="field" value={form.image} onChange={(e) => set("image", e.target.value)} placeholder="/images/blog_1.jpg" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Publication Date</label>
           <input type="date" className="field" value={form.date} onChange={(e) => set("date", e.target.value)} />
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Card Snippet (Short Summary)</label>
           <textarea className="field" rows={2} value={form.snippet} onChange={(e) => set("snippet", e.target.value)} placeholder="Short summary displayed on article cards..." />
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Full Content (HTML Supported)</label>
-          <textarea className="field font-mono text-xs" rows={12} value={form.content} onChange={(e) => set("content", e.target.value)} placeholder="<p>Write your article body here...</p>" />
+          <textarea className="field font-mono text-xs" rows={10} value={form.content} onChange={(e) => set("content", e.target.value)} placeholder="<p>Write your article body here...</p>" />
         </div>
-        <div className="sm:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
+        <div className="sm:col-span-2 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between min-w-0">
+          <div className="min-w-0">
             <p className="font-bold text-sm text-[#081630]">Visibility Status</p>
             <p className="text-xs text-slate-500">Choose whether this article is live on the public website.</p>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex items-center cursor-pointer shrink-0 self-start sm:self-auto">
             <input type="checkbox" checked={form.published} onChange={(e) => set("published", e.target.checked)} className="sr-only peer" />
             <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#EE7862]"></div>
             <span className="ml-3 text-xs font-bold text-slate-700">{form.published ? "Published" : "Draft"}</span>
@@ -94,11 +94,11 @@ function BlogForm({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 pt-2">
-        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial">
+      <div className="flex flex-wrap gap-2 pt-1">
+        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial min-w-0">
           <Save className="w-4 h-4" /> Save Article
         </button>
-        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial">Cancel</button>
+        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial min-w-0">Cancel</button>
       </div>
     </div>
   );
@@ -153,11 +153,11 @@ export default function AdminBlogsPage() {
     <>
       {editingBlog !== null ? (
         <>
-          <button onClick={() => setEditingBlog(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Articles
+          <button onClick={() => setEditingBlog(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-4 transition-colors">
+            <ArrowLeft className="w-4 h-4 shrink-0" /> Back to Articles
           </button>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm">
-            <h2 className="font-bold text-xl sm:text-2xl text-[#081630] mb-6">
+          <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-sm min-w-0 overflow-hidden">
+            <h2 className="font-bold text-lg sm:text-xl text-[#081630] mb-4 break-words">
               {editingBlog === "new" ? "Create New Article" : "Edit Article"}
             </h2>
             <BlogForm
@@ -170,46 +170,46 @@ export default function AdminBlogsPage() {
         </>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h1 className="font-bold text-2xl text-[#081630]">Blog Articles</h1>
-              <p className="text-slate-500 text-sm mt-0.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 min-w-0">
+            <div className="min-w-0">
+              <h1 className="font-bold text-xl text-[#081630]">Blog Articles</h1>
+              <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
                 {blogs.length} total · {blogs.filter((b) => b.published).length} published live
               </p>
             </div>
-            <button onClick={() => setEditingBlog("new")} className="btn-primary w-full sm:w-auto">
+            <button onClick={() => setEditingBlog("new")} className="btn-primary w-full sm:w-auto shrink-0">
               <Plus className="w-4 h-4" /> New Article
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 min-w-0">
             {blogs.map((post) => (
-              <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-                <div className="flex items-start gap-4 min-w-0 w-full sm:w-auto flex-1">
-                  <div className="relative w-20 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200">
+              <div key={post.id} className="bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between min-w-0 overflow-hidden">
+                <div className="flex items-start gap-3 min-w-0 w-full sm:w-auto flex-1">
+                  <div className="relative w-16 h-14 sm:w-20 sm:h-16 rounded-xl overflow-hidden shrink-0 bg-slate-100 border border-slate-200">
                     <Image src={post.image} alt={post.title} fill className="object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${post.published ? "bg-emerald-100 text-emerald-800 border border-emerald-200" : "bg-amber-100 text-amber-800 border border-amber-200"}`}>
+                    <div className="flex flex-wrap items-center gap-1.5 mb-1">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${post.published ? "bg-emerald-100 text-emerald-800 border border-emerald-200" : "bg-amber-100 text-amber-800 border border-amber-200"}`}>
                         {post.published ? "● Published" : "○ Draft"}
                       </span>
-                      <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2.5 py-0.5 rounded-full uppercase">{post.category}</span>
+                      <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2 py-0.5 rounded-full uppercase max-w-[8rem] truncate">{post.category}</span>
                       <span className="text-[10px] text-slate-400">
                         {new Date(post.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </span>
                     </div>
-                    <h3 className="font-bold text-[#081630] text-sm sm:text-base leading-snug line-clamp-1">{post.title}</h3>
-                    <p className="text-slate-500 text-xs mt-0.5 line-clamp-1">{post.snippet}</p>
+                    <h3 className="font-bold text-[#081630] text-sm leading-snug line-clamp-2 break-words">{post.title}</h3>
+                    <p className="text-slate-500 text-xs mt-0.5 line-clamp-1 break-words">{post.snippet}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
+                <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0 flex-wrap">
                   <button
                     disabled={busy}
                     onClick={() => handleTogglePublished(post)}
                     title={post.published ? "Unpublish Article" : "Publish Article"}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                       post.published
                         ? "bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800"
                         : "bg-[#081630] hover:bg-[#EE7862] text-white"
@@ -259,8 +259,8 @@ export default function AdminBlogsPage() {
       )}
 
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 overflow-x-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-6 max-w-sm w-full text-center relative min-w-0 overflow-hidden">
             <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>

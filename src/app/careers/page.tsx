@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ConsultationModal from "@/components/ConsultationModal";
-import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin, Briefcase } from "lucide-react";
+import { Heart, ShieldCheck, Clock, Award, CheckCircle2, ArrowRight, MapPin } from "lucide-react";
 import { fetchJobs, getJobs, type JobOpening } from "@/lib/store";
 import CustomSelect from "@/components/CustomSelect";
 import UsPhoneInput from "@/components/UsPhoneInput";
@@ -45,19 +45,20 @@ export default function CareersPage() {
   };
 
   const selectOptions = React.useMemo(() => {
-    const base = jobs.map((j) => ({ value: j.title, label: `${j.title} (${j.type})` }));
-    const extras = [
-      { value: "General In-Home Caregiver", label: "General In-Home Caregiver" },
-      { value: "Certified Nursing Assistant (CNA)", label: "Certified Nursing Assistant (CNA)" },
-      { value: "Registered Nurse (RN) / LPN", label: "Registered Nurse (RN) / LPN" },
-    ];
-    const combined = [...base, ...extras];
     const dedup = new Map<string, { value: string; label: string }>();
-    combined.forEach((o) => {
-      if (!dedup.has(o.value)) dedup.set(o.value, o);
+    jobs.forEach((j) => {
+      const title = j.title.trim();
+      if (!title || dedup.has(title)) return;
+      dedup.set(title, { value: title, label: `${title} (${j.type})` });
     });
-    return [{ value: "", label: "Select position..." }, ...Array.from(dedup.values())];
+    return [{ value: "", label: "Select an open position..." }, ...Array.from(dedup.values())];
   }, [jobs]);
+
+  useEffect(() => {
+    if (selectedPos && !jobs.some((j) => j.title.trim() === selectedPos)) {
+      setSelectedPos("");
+    }
+  }, [jobs, selectedPos]);
 
   const handleApplyClick = (title: string) => {
     setSelectedPos(title);
@@ -77,6 +78,10 @@ export default function CareersPage() {
       position: fd.get("position")?.toString() || selectedPos || "",
       message: fd.get("message")?.toString() || "",
     };
+    if (!payload.position) {
+      alert("Please select an open position.");
+      return;
+    }
     setSubmitting(true);
     try {
       const res = await fetch("/api/applications", {
@@ -271,13 +276,21 @@ export default function CareersPage() {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Position Interested In</label>
-                  <CustomSelect
-                    options={selectOptions}
-                    value={selectedPos}
-                    onChange={(v) => setSelectedPos(v)}
-                    placeholder="Select position..."
-                  />
-                  <input type="hidden" name="position" value={selectedPos} />
+                  {jobs.length === 0 ? (
+                    <p className="text-sm text-slate-600 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3">
+                      There are no open positions at this time. Please check back soon.
+                    </p>
+                  ) : (
+                    <>
+                      <CustomSelect
+                        options={selectOptions}
+                        value={selectedPos}
+                        onChange={(v) => setSelectedPos(v)}
+                        placeholder="Select an open position..."
+                      />
+                      <input type="hidden" name="position" value={selectedPos} />
+                    </>
+                  )}
                 </div>
 
                 <div>
@@ -287,7 +300,7 @@ export default function CareersPage() {
 
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || jobs.length === 0}
                   className="w-full bg-[#EE7862] hover:bg-[#E4644D] disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-wait text-white font-semibold py-4 rounded-xl shadow-lg transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {submitting ? (

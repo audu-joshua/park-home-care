@@ -80,11 +80,11 @@ export default function CustomSelect({
                 onChange(opt.value);
                 setOpen(false);
               }}
-              className={`px-4 py-2 text-sm cursor-pointer flex items-center justify-between hover:bg-slate-50 ${
+              className={`px-4 py-2 text-sm cursor-pointer flex items-center justify-between gap-2 hover:bg-slate-50 min-w-0 ${
                 i === highlight ? "bg-slate-50" : ""
               }`}
             >
-              <span className="truncate">{opt.label}</span>
+              <span className="truncate min-w-0">{opt.label}</span>
               {opt.value === value && <Check className="w-4 h-4 text-[#00F0ED]" />}
             </li>
           ))}

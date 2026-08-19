@@ -111,7 +111,7 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#040C1A] flex items-center justify-center px-4 py-12 relative">
+    <div className="min-h-screen bg-[#040C1A] flex items-center justify-center px-4 py-12 relative overflow-x-hidden">
       {/* Ambient background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full border border-white/5" />
@@ -344,7 +344,7 @@ export default function AdminLoginPage() {
             </form>
           )}
 
-          <div className="text-center text-slate-500 text-xs mt-6 pt-4 border-t border-white/10 flex items-center justify-between">
+          <div className="text-center text-slate-500 text-xs mt-6 pt-4 border-t border-white/10 flex flex-wrap items-center justify-center sm:justify-between gap-2">
             <a href="/" className="hover:text-slate-300 transition-colors">← Back to website</a>
             <span className="text-[10px] text-slate-600">Pack Home Health Agency</span>
           </div>

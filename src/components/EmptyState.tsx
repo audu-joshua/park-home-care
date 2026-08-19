@@ -10,10 +10,9 @@ export default function EmptyState({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-100 p-12 text-center">
-      <div className="text-slate-400 mb-4">{/* icon placeholder */}</div>
-      <h3 className="font-bold text-lg text-[#081630] mb-2">{title}</h3>
-      <p className="text-sm text-slate-500 mb-4">{description}</p>
+    <div className="bg-white rounded-2xl border border-slate-100 p-8 sm:p-10 text-center min-w-0 overflow-hidden">
+      <h3 className="font-bold text-base sm:text-lg text-[#081630] mb-2 break-words">{title}</h3>
+      <p className="text-sm text-slate-500 mb-4 break-words">{description}</p>
       {action}
     </div>
   );

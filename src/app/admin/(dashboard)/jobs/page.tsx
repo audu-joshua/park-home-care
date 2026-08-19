@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X, MapPin, Briefcase } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff, Save, ArrowLeft, X } from "lucide-react";
 import {
   fetchJobs,
   getJobs,
@@ -50,17 +50,17 @@ function JobForm({
   const removeReq = (idx: number) => set("requirements", form.requirements.filter((_, i) => i !== idx));
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="sm:col-span-2">
+    <div className="space-y-4 min-w-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Job Title</label>
           <input className="field" value={form.title} onChange={(e) => set("title", e.target.value)} placeholder="e.g. Certified Nursing Assistant (CNA)" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Department</label>
           <input className="field" value={form.department} onChange={(e) => set("department", e.target.value)} placeholder="e.g. Caregiving, Clinical, Administration" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Employment Type</label>
           <select className="field bg-white" value={form.type} onChange={(e) => set("type", e.target.value as JobOpening["type"])}>
             <option>Full-Time</option>
@@ -68,26 +68,26 @@ function JobForm({
             <option>Flexible</option>
           </select>
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Location</label>
           <input className="field" value={form.location} onChange={(e) => set("location", e.target.value)} placeholder="Raleigh, NC" />
         </div>
-        <div>
+        <div className="min-w-0">
           <label className="field-label">Date Posted</label>
           <input type="date" className="field" value={form.posted} onChange={(e) => set("posted", e.target.value)} />
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Role Description</label>
           <textarea className="field" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Brief summary of duties and responsibilities..." />
         </div>
-        <div className="sm:col-span-2">
+        <div className="sm:col-span-2 min-w-0">
           <label className="field-label">Key Requirements</label>
           <div className="space-y-2">
             {form.requirements.map((req, i) => (
-              <div key={i} className="flex gap-2">
-                <input className="field flex-1" value={req} onChange={(e) => setReq(i, e.target.value)} placeholder={`Requirement #${i + 1}`} />
+              <div key={i} className="flex gap-2 min-w-0">
+                <input className="field min-w-0 flex-1" value={req} onChange={(e) => setReq(i, e.target.value)} placeholder={`Requirement #${i + 1}`} />
                 {form.requirements.length > 1 && (
-                  <button type="button" onClick={() => removeReq(i)} className="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                  <button type="button" onClick={() => removeReq(i)} className="p-2 text-slate-400 hover:text-red-500 transition-colors shrink-0">
                     <X className="w-4 h-4" />
                   </button>
                 )}
@@ -98,12 +98,12 @@ function JobForm({
             </button>
           </div>
         </div>
-        <div className="sm:col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between">
-          <div>
+        <div className="sm:col-span-2 bg-slate-50 p-3 sm:p-4 rounded-xl border border-slate-200 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between min-w-0">
+          <div className="min-w-0">
             <p className="font-bold text-sm text-[#081630]">Active Status</p>
             <p className="text-xs text-slate-500">Show this job opening on the careers page for candidates to apply.</p>
           </div>
-          <label className="relative inline-flex items-center cursor-pointer">
+          <label className="relative inline-flex items-center cursor-pointer shrink-0 self-start sm:self-auto">
             <input type="checkbox" checked={form.active} onChange={(e) => set("active", e.target.checked)} className="sr-only peer" />
             <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#EE7862]"></div>
             <span className="ml-3 text-xs font-bold text-slate-700">{form.active ? "Active" : "Hidden"}</span>
@@ -111,11 +111,11 @@ function JobForm({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3 pt-2">
-        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial">
+      <div className="flex flex-wrap gap-2 pt-1">
+        <button onClick={() => onSave(form)} className="btn-primary flex-1 sm:flex-initial min-w-0">
           <Save className="w-4 h-4" /> Save Job Opening
         </button>
-        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial">Cancel</button>
+        <button onClick={onCancel} className="btn-ghost flex-1 sm:flex-initial min-w-0">Cancel</button>
       </div>
     </div>
   );
@@ -178,11 +178,11 @@ export default function AdminJobsPage() {
     <>
       {editingJob !== null ? (
         <>
-          <button onClick={() => setEditingJob(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-6 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back to Job Openings
+          <button onClick={() => setEditingJob(null)} className="flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-4 transition-colors">
+            <ArrowLeft className="w-4 h-4 shrink-0" /> Back to Job Openings
           </button>
-          <div className="bg-white rounded-2xl border border-slate-200 p-5 sm:p-8 shadow-sm">
-            <h2 className="font-bold text-xl sm:text-2xl text-[#081630] mb-6">
+          <div className="bg-white rounded-2xl border border-slate-200 p-3.5 sm:p-6 shadow-sm min-w-0 overflow-hidden">
+            <h2 className="font-bold text-lg sm:text-xl text-[#081630] mb-4 break-words">
               {editingJob === "new" ? "Add Job Opening" : "Edit Job Opening"}
             </h2>
             <JobForm
@@ -195,43 +195,43 @@ export default function AdminJobsPage() {
         </>
       ) : (
         <>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <div>
-              <h1 className="font-bold text-2xl text-[#081630]">Job Openings</h1>
-              <p className="text-slate-500 text-sm mt-0.5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 min-w-0">
+            <div className="min-w-0">
+              <h1 className="font-bold text-xl text-[#081630]">Job Openings</h1>
+              <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
                 {jobs.length} total · {jobs.filter((j) => j.active).length} active listings
               </p>
             </div>
-            <button onClick={() => setEditingJob("new")} className="btn-primary w-full sm:w-auto">
+            <button onClick={() => setEditingJob("new")} className="btn-primary w-full sm:w-auto shrink-0">
               <Plus className="w-4 h-4" /> New Opening
             </button>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-3 min-w-0">
             {jobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+              <div key={job.id} className="bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between min-w-0 overflow-hidden">
                 <div className="flex-1 min-w-0 w-full sm:w-auto">
-                  <div className="flex flex-wrap items-center gap-2 mb-1.5">
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${job.active ? "bg-emerald-100 text-emerald-800 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
+                  <div className="flex flex-wrap items-center gap-1.5 mb-1.5">
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${job.active ? "bg-emerald-100 text-emerald-800 border-emerald-200" : "bg-slate-100 text-slate-500 border-slate-200"}`}>
                       {job.active ? "● Active" : "○ Hidden"}
                     </span>
-                    <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${typeColor(job.type)}`}>{job.type}</span>
-                    <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2.5 py-0.5 rounded-full uppercase">{job.department}</span>
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${typeColor(job.type)}`}>{job.type}</span>
+                    <span className="text-[10px] font-bold text-[#081630] bg-[#00F0ED]/20 px-2 py-0.5 rounded-full uppercase max-w-[9rem] truncate">{job.department}</span>
                   </div>
-                  <h3 className="font-bold text-[#081630] text-sm sm:text-base leading-snug">{job.title}</h3>
+                  <h3 className="font-bold text-[#081630] text-sm leading-snug break-words">{job.title}</h3>
                   <p className="text-slate-500 text-xs mt-1 flex items-center gap-2 flex-wrap">
-                    <span>📍 {job.location}</span>
+                    <span className="break-words">{job.location}</span>
                     <span>•</span>
                     <span>Posted {new Date(job.posted).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
                   </p>
                 </div>
 
-                <div className="flex items-center gap-2 w-full sm:w-auto justify-end pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
+                <div className="flex items-center gap-1.5 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0 flex-wrap">
                   <button
                     disabled={busy}
                     onClick={() => handleToggleActive(job)}
                     title={job.active ? "Hide Listing" : "Activate Listing"}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
                       job.active
                         ? "bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-800"
                         : "bg-[#081630] hover:bg-[#EE7862] text-white"
@@ -240,7 +240,7 @@ export default function AdminJobsPage() {
                     {job.active ? (
                       <>
                         <EyeOff className="w-3.5 h-3.5" />
-                        <span>Deactivate</span>
+                        <span>Hide</span>
                       </>
                     ) : (
                       <>
@@ -281,8 +281,8 @@ export default function AdminJobsPage() {
       )}
 
       {deleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 overflow-x-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-6 max-w-sm w-full text-center relative min-w-0 overflow-hidden">
             <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>

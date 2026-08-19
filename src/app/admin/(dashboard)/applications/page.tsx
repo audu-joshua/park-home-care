@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from "react";
 import {
-  Mail, Phone, Briefcase, Calendar, Trash2, X, Search, User, FileText, ArrowRight
+  Mail, Phone, Briefcase, Calendar, Trash2, X, Search, User, ArrowRight
 } from "lucide-react";
 import {
   fetchApplications,
@@ -71,18 +71,18 @@ export default function AdminApplicationsPage() {
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="font-bold text-2xl text-[#081630]">Job Applications</h1>
-          <p className="text-slate-500 text-sm mt-0.5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 min-w-0">
+        <div className="min-w-0">
+          <h1 className="font-bold text-xl text-[#081630]">Job Applications</h1>
+          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
             {apps.length} submitted {apps.length === 1 ? "candidate application" : "candidate applications"}
           </p>
         </div>
-        <div className="relative w-full sm:w-72">
+        <div className="relative w-full sm:w-64 min-w-0 shrink-0">
           <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             className="field pl-9"
-            placeholder="Search candidate name, position, email..."
+            placeholder="Search name, position, email..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
           />
@@ -103,24 +103,24 @@ export default function AdminApplicationsPage() {
           }
         />
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2.5 min-w-0">
           {filtered.map((app) => (
             <div
               key={app.id}
               onClick={() => setSelected(app)}
-              className="w-full text-left bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 cursor-pointer group"
+              className="w-full text-left bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 cursor-pointer group min-w-0 overflow-hidden"
             >
-              <div className="flex items-center gap-3.5 min-w-0 w-full sm:w-auto">
-                <div className="w-11 h-11 rounded-full bg-[#081630] text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-sm group-hover:bg-[#EE7862] transition-colors">
+              <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
+                <div className="w-10 h-10 rounded-full bg-[#081630] text-white flex items-center justify-center text-sm font-bold shrink-0 shadow-sm group-hover:bg-[#EE7862] transition-colors">
                   {initials(app)}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex flex-wrap items-center gap-2 mb-0.5">
-                    <h3 className="font-bold text-[#081630] text-sm sm:text-base group-hover:text-[#EE7862] transition-colors">
+                  <div className="flex flex-wrap items-center gap-1.5 mb-0.5">
+                    <h3 className="font-bold text-[#081630] text-sm group-hover:text-[#EE7862] transition-colors break-words">
                       {app.firstName} {app.lastName}
                     </h3>
                     {app.position && (
-                      <span className="text-[10px] font-bold text-[#EE7862] bg-[#EE7862]/10 border border-[#EE7862]/20 px-2.5 py-0.5 rounded-full">
+                      <span className="text-[10px] font-bold text-[#EE7862] bg-[#EE7862]/10 border border-[#EE7862]/20 px-2 py-0.5 rounded-full max-w-full truncate">
                         {app.position}
                       </span>
                     )}
@@ -132,7 +132,7 @@ export default function AdminApplicationsPage() {
 
               <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 shrink-0">
                 <span className="text-xs font-semibold text-[#EE7862] group-hover:translate-x-0.5 transition-transform flex items-center gap-1">
-                  View Full Details <ArrowRight className="w-3.5 h-3.5" />
+                  View details <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
             </div>
@@ -142,56 +142,56 @@ export default function AdminApplicationsPage() {
 
       {/* Application Detail Modal */}
       {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col overflow-hidden">
-            <div className="flex items-start justify-between p-5 sm:p-6 border-b border-slate-100 bg-[#081630] text-white">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-[#EE7862] text-white flex items-center justify-center font-bold text-lg shadow-md">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-3 overflow-x-hidden">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden min-w-0">
+            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-slate-100 bg-[#081630] text-white min-w-0">
+              <div className="flex items-center gap-3 min-w-0 flex-1">
+                <div className="w-10 h-10 rounded-full bg-[#EE7862] text-white flex items-center justify-center font-bold text-base shadow-md shrink-0">
                   {initials(selected)}
                 </div>
-                <div>
-                  <h2 className="font-bold text-lg text-white leading-tight">
+                <div className="min-w-0">
+                  <h2 className="font-bold text-base text-white leading-tight truncate">
                     {selected.firstName} {selected.lastName}
                   </h2>
-                  <p className="text-xs text-[#00F0ED] font-semibold">{selected.position || "Caregiver Applicant"}</p>
+                  <p className="text-xs text-[#00F0ED] font-semibold truncate">{selected.position || "Caregiver Applicant"}</p>
                 </div>
               </div>
-              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-white p-1 rounded-lg">
+              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-white p-1 rounded-lg shrink-0">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <div className="p-5 sm:p-6 space-y-4 overflow-y-auto flex-1">
+            <div className="p-4 sm:p-5 space-y-3 overflow-y-auto overflow-x-hidden flex-1 min-w-0">
               <DetailRow icon={User} label="Applicant Name" value={`${selected.firstName} ${selected.lastName}`} />
               <DetailRow icon={Mail} label="Email Address" value={selected.email} href={`mailto:${selected.email}`} />
               <DetailRow icon={Phone} label="Phone Number" value={selected.phone} href={`tel:${selected.phone}`} />
               <DetailRow icon={Briefcase} label="Position Interested In" value={selected.position || "General Application"} />
               <DetailRow icon={Calendar} label="Date Submitted" value={formatDate(selected.createdAt)} />
 
-              <div className="pt-2">
+              <div className="pt-1 min-w-0">
                 <p className="field-label">Experience & Cover Message</p>
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 text-xs sm:text-sm text-slate-700 whitespace-pre-wrap leading-relaxed">
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-700 whitespace-pre-wrap break-words leading-relaxed">
                   {selected.message?.trim() || "No additional notes provided."}
                 </div>
               </div>
             </div>
 
-            <div className="p-4 sm:p-6 border-t border-slate-100 bg-slate-50 flex flex-wrap gap-3">
+            <div className="p-3 sm:p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row gap-2 min-w-0">
               <a
                 href={`mailto:${selected.email}`}
-                className="btn-primary flex-1 justify-center text-xs sm:text-sm"
+                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0"
               >
                 <Mail className="w-4 h-4" /> Email Candidate
               </a>
               <a
                 href={`tel:${selected.phone}`}
-                className="btn-ghost flex-1 justify-center text-xs sm:text-sm bg-white border border-slate-200 hover:bg-slate-100"
+                className="btn-ghost flex-1 justify-center text-xs sm:text-sm bg-white border border-slate-200 hover:bg-slate-100 min-w-0"
               >
                 <Phone className="w-4 h-4 text-emerald-600" /> Call Candidate
               </a>
               <button
                 onClick={() => setDeleteId(selected.id)}
-                className="p-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-all border border-red-200 cursor-pointer"
+                className="p-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-all border border-red-200 cursor-pointer shrink-0 self-center sm:self-auto"
                 title="Delete Application"
               >
                 <Trash2 className="w-4 h-4" />
@@ -203,8 +203,8 @@ export default function AdminApplicationsPage() {
 
       {/* Delete Confirmation Modal */}
       {deleteId && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center relative">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 overflow-x-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-6 max-w-sm w-full text-center relative min-w-0 overflow-hidden">
             <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
               <X className="w-4 h-4" />
             </button>
@@ -242,8 +242,8 @@ function DetailRow({
   href?: string;
 }) {
   return (
-    <div className="flex items-start gap-3">
-      <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
+    <div className="flex items-start gap-3 min-w-0">
+      <div className="w-8 h-8 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center shrink-0">
         <Icon className="w-4 h-4" />
       </div>
       <div className="min-w-0 flex-1">
@@ -253,7 +253,7 @@ function DetailRow({
             {value}
           </a>
         ) : (
-          <p className="text-sm font-semibold text-[#081630] break-all">{value}</p>
+          <p className="text-sm font-semibold text-[#081630] break-words">{value}</p>
         )}
       </div>
     </div>
