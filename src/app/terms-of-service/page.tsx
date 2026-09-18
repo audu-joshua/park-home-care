@@ -114,7 +114,7 @@ export default function TermsOfServicePage() {
               <ul>
                 <li><strong>Pack Home Health Agency LLC</strong></li>
                 <li>1312 Forestford Court, Raleigh, NC 27610</li>
-                <li>Phone: <a href="tel:+19175868217">+1 (917) 586-8217</a></li>
+                <li>Phone: <a href="tel:+19194414119">+1 (919) 441-4119</a></li>
                 <li>Email: <a href="mailto:info@packhomehealthcareagency.com">info@packhomehealthcareagency.com</a></li>
               </ul>
             </div>

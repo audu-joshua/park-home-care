@@ -94,7 +94,7 @@ export default function Header({ onOpenConsultation }: HeaderProps) {
             </button>
 
             <a
-              href="tel:+19175868217"
+              href="tel:+19194414119"
               className={`inline-flex items-center gap-2 text-xs font-semibold px-4.5 py-2.5 rounded-full shadow-md hover:scale-105 active:scale-95 transition-all duration-200 uppercase tracking-wider cursor-pointer ${
                 scrolled
                   ? "bg-[#081630] hover:bg-[#0D2247] text-white"
@@ -102,7 +102,7 @@ export default function Header({ onOpenConsultation }: HeaderProps) {
               }`}
             >
               <Phone className="w-3.5 h-3.5 text-[#00F0ED]" />
-              <span>+1 (917) 586-8217</span>
+              <span>+1 (919) 441-4119</span>
             </a>
           </div>
 
@@ -191,8 +191,8 @@ export default function Header({ onOpenConsultation }: HeaderProps) {
                 Pack Home Health Care
               </a>
               <span>•</span>
-              <a href="tel:+19175868217" className="hover:text-[#EE7862] transition-colors cursor-pointer">
-                +1 (917) 586-8217
+              <a href="tel:+19194414119" className="hover:text-[#EE7862] transition-colors cursor-pointer">
+                +1 (919) 441-4119
               </a>
             </div>
           </div>
