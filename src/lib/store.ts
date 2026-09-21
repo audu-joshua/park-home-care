@@ -32,6 +32,10 @@ export interface JobApplication {
   phone: string;
   position: string;
   message: string;
+  backgroundCheckConsent: boolean;
+  backgroundCheckConsentAt?: string;
+  resumeName?: string;
+  resumeDataUrl?: string;
   createdAt: string;
 }
 
@@ -280,16 +284,24 @@ export async function deleteBlogRemote(id: string): Promise<boolean> {
   }
 }
 
-export async function fetchJobs(): Promise<JobOpening[]> {
-  if (!isBrowser()) return SEED_JOBS;
+export async function fetchJobs(activeOnly = false): Promise<JobOpening[]> {
+  if (!isBrowser()) return activeOnly ? SEED_JOBS.filter((job) => job.active) : SEED_JOBS;
   try {
-    const res = await fetch("/api/jobs", { cache: "no-store" });
+    const url = activeOnly ? "/api/jobs?active=true" : "/api/jobs";
+    const res = await fetch(url, { cache: "no-store" });
     if (!res.ok) throw new Error("API error");
     const rows = asArray<JobOpening>(await res.json());
-    localStorage.setItem(JOBS_KEY, JSON.stringify(rows));
-    return rows;
+    const normalized = rows.map((job) => ({
+      ...job,
+      active: Boolean(job.active),
+    }));
+    localStorage.setItem(JOBS_KEY, JSON.stringify(normalized));
+    return activeOnly ? normalized.filter((job) => job.active) : normalized;
   } catch {
-    return getJobs();
+    const cached = getJobs();
+    const fallback = activeOnly ? cached.filter((job) => job.active) : cached;
+    localStorage.setItem(JOBS_KEY, JSON.stringify(cached));
+    return fallback;
   }
 }
 

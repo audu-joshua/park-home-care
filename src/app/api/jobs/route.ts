@@ -9,12 +9,15 @@ function clean(doc: Record<string, unknown>) {
   return rest;
 }
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const activeOnly = searchParams.get("active") === "true";
     const db = await getDb();
+    const query = activeOnly ? { active: true } : {};
     const rows = await db
       .collection("jobs")
-      .find({}, { projection: { _id: 0 } })
+      .find(query, { projection: { _id: 0 } })
       .sort({ posted: -1 })
       .toArray();
     return NextResponse.json(rows.map((row) => clean(row as Record<string, unknown>)));

@@ -23,9 +23,9 @@ export default function CareersPage() {
     let mounted = true;
     (async () => {
       try {
-        const all = await fetchJobs();
+        const all = await fetchJobs(true);
         if (!mounted) return;
-        setJobs(all.filter((j) => j.active));
+        setJobs(all);
       } catch {
         if (!mounted) return;
         setJobs(getJobs().filter((j) => j.active));
@@ -65,11 +65,20 @@ export default function CareersPage() {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const readFileAsDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ""));
+    reader.onerror = () => reject(new Error("Failed to read file"));
+    reader.readAsDataURL(file);
+  });
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting) return;
     const form = e.currentTarget;
     const fd = new FormData(form);
+    const file = fd.get("resume") as File | null;
+    const backgroundCheckConsent = fd.get("backgroundCheckConsent") === "on";
     const payload = {
       firstName: fd.get("firstName")?.toString() || "",
       lastName: fd.get("lastName")?.toString() || "",
@@ -77,17 +86,36 @@ export default function CareersPage() {
       email: fd.get("email")?.toString() || "",
       position: fd.get("position")?.toString() || selectedPos || "",
       message: fd.get("message")?.toString() || "",
+      backgroundCheckConsent,
     };
     if (!payload.position) {
       alert("Please select an open position.");
       return;
     }
+    if (!backgroundCheckConsent) {
+      alert("Please consent to a background check before submitting your application.");
+      return;
+    }
+    if (!file || !file.size) {
+      alert("Please upload your resume before submitting your application.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Please upload a resume smaller than 5MB.");
+      return;
+    }
+
     setSubmitting(true);
     try {
+      const resumeDataUrl = await readFileAsDataUrl(file);
       const res = await fetch("/api/applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          ...payload,
+          resumeName: file.name || "resume.pdf",
+          resumeDataUrl,
+        }),
       });
       if (res.ok) {
         setSubmitted(true);
@@ -296,6 +324,31 @@ export default function CareersPage() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Brief Summary of Experience</label>
                   <textarea name="message" rows={4} placeholder="Tell us briefly about your caregiving experience and availability..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm"></textarea>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Resume Upload</label>
+                    <input
+                      name="resume"
+                      type="file"
+                      accept=".pdf,.doc,.docx"
+                      required
+                      className="w-full px-4 py-3 rounded-xl border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm file:mr-3 file:rounded-lg file:border-0 file:bg-[#081630] file:px-3 file:py-2 file:text-xs file:font-semibold file:text-white"
+                    />
+                    <p className="mt-1 text-[11px] text-slate-500">Accepted: PDF, DOC, or DOCX (max 5MB)</p>
+                  </div>
+
+                  <label className="flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm text-slate-700">
+                    <input
+                      type="checkbox"
+                      name="backgroundCheckConsent"
+                      className="mt-1 h-4 w-4 rounded border-slate-300 text-[#EE7862] focus:ring-[#EE7862]"
+                    />
+                    <span>
+                      I authorize Pack Home Health Care Agency to conduct a background check as part of my application for employment, including criminal, employment, and reference verification as applicable.
+                    </span>
+                  </label>
                 </div>
 
                 <button

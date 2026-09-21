@@ -33,6 +33,7 @@ export async function POST(req: Request) {
     const body = await req.json();
     const db = await getDb();
     const col = db.collection("applications");
+    const consent = Boolean(body.backgroundCheckConsent);
     const doc = {
       id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
       firstName: body.firstName || "",
@@ -41,6 +42,10 @@ export async function POST(req: Request) {
       phone: body.phone || "",
       position: body.position || "",
       message: body.message || "",
+      backgroundCheckConsent: consent,
+      backgroundCheckConsentAt: consent ? new Date() : null,
+      resumeName: body.resumeName || "",
+      resumeDataUrl: body.resumeDataUrl || "",
       createdAt: new Date(),
     };
     await col.insertOne(doc);
@@ -53,6 +58,8 @@ export async function POST(req: Request) {
       Email: applicantEmail || "Not provided",
       Phone: doc.phone || "Not provided",
       Experience: doc.message || "No summary provided",
+      "Background Check Consent": consent ? "Yes" : "No",
+      Resume: doc.resumeName || "No resume uploaded",
       "View Application": `${siteUrl()}/admin/login`,
     };
     const adminSubject = `New Application: ${doc.position} - ${name}`;

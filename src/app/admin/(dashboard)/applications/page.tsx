@@ -39,6 +39,25 @@ export default function AdminApplicationsPage() {
     setApps(await fetchApplications());
   };
 
+  const downloadResume = (app: JobApplication) => {
+    if (!app.resumeDataUrl) return;
+    const link = document.createElement("a");
+    link.href = app.resumeDataUrl;
+    link.download = app.resumeName || `${app.firstName || "candidate"}-${app.lastName || "resume"}.pdf`;
+    link.click();
+  };
+
+  const downloadBackgroundCheckForm = () => {
+    const link = document.createElement("a");
+    link.href = "/packhome_Background_Check.pdf";
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.download = "packhome_Background_Check.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     (async () => {
       await refresh();
@@ -174,12 +193,41 @@ export default function AdminApplicationsPage() {
                   {selected.message?.trim() || "No additional notes provided."}
                 </div>
               </div>
+
+              <div className="pt-1 min-w-0">
+                <p className="field-label">Background Check Consent</p>
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-700">
+                  {selected.backgroundCheckConsent ? `Granted${selected.backgroundCheckConsentAt ? ` on ${formatDate(selected.backgroundCheckConsentAt)}` : ""}` : "Not granted"}
+                </div>
+              </div>
+
+              <div className="pt-1 min-w-0">
+                <p className="field-label">Resume</p>
+                {selected.resumeDataUrl ? (
+                  <button
+                    onClick={() => downloadResume(selected)}
+                    className="w-full text-left bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-[#081630] hover:bg-slate-100 transition-colors"
+                  >
+                    {selected.resumeName || "Download resume"}
+                  </button>
+                ) : (
+                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-500">
+                    No resume uploaded.
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="p-3 sm:p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row gap-2 min-w-0">
+              <button
+                onClick={downloadBackgroundCheckForm}
+                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0"
+              >
+                <Mail className="w-4 h-4" /> BG Check Form
+              </button>
               <a
                 href={`mailto:${selected.email}`}
-                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0"
+                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0 bg-[#081630] hover:bg-[#1d2a41]"
               >
                 <Mail className="w-4 h-4" /> Email Candidate
               </a>
