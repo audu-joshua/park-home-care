@@ -67,10 +67,12 @@ export function buildInboxHtml(subject: string, fields: Record<string, string>) 
   `;
 }
 
-export function buildApplicationConfirmHtml(opts: { name: string; position: string }) {
+export function buildApplicationConfirmHtml(opts: { name: string; position: string; backgroundCheckUrl?: string; returnDays?: number }) {
   const name = escapeHtml(opts.name || "there");
   const position = escapeHtml(opts.position || "the role");
   const site = "https://www.packhomehealthcareagency.com";
+  const bgUrl = opts.backgroundCheckUrl || `${site}/packhome_Background_Check.pdf`;
+  const returnDays = opts.returnDays ?? 3;
 
   return `
     <div style="font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;max-width:600px;margin:0 auto;background-color:#ffffff;border-radius:16px;overflow:hidden;border:1px solid #e2e8f0;">
@@ -78,7 +80,11 @@ export function buildApplicationConfirmHtml(opts: { name: string; position: stri
       <div style="padding:28px;color:#1e293b;font-size:14px;line-height:1.6;">
         <p style="margin:0 0 16px;">Hi ${name},</p>
         <p style="margin:0 0 16px;">Thank you for applying for <strong>${position}</strong> at Pack Home Health Care Agency LLC. We have received your application and our team will review it shortly.</p>
-        <p style="margin:0 0 24px;">If we need anything else, we will contact you at this email address.</p>
+        <p style="margin:0 0 16px;">To continue with the hiring process, please download and complete the background check authorization form below and return it to us within <strong>${returnDays} days</strong>.</p>
+        <p style="margin:0 0 20px;">
+          <a href="${bgUrl}" target="_blank" style="color:#081630;font-weight:700;">Download Background Check Form</a>
+        </p>
+        <p style="margin:0 0 24px;">Please return the completed form by email to <a href="mailto:info@packhomehealthcareagency.com" style="color:#081630;font-weight:700;">info@packhomehealthcareagency.com</a>.</p>
         <table border="0" cellspacing="0" cellpadding="0" role="presentation" style="margin:0 auto 8px;">
           <tr>
             <td align="center" bgcolor="#EE7862" style="background-color:#EE7862;border-radius:50px;">

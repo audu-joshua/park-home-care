@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import {
   Mail, Phone, Briefcase, Calendar, Trash2, X, Search, User, ArrowRight
 } from "lucide-react";
@@ -31,7 +32,6 @@ export default function AdminApplicationsPage() {
   const [apps, setApps] = useState<JobApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<JobApplication | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
@@ -80,7 +80,6 @@ export default function AdminApplicationsPage() {
     setBusy(true);
     try {
       await deleteApplicationRemote(id);
-      if (selected?.id === id) setSelected(null);
       await refresh();
     } finally {
       setDeleteId(null);
@@ -124,9 +123,9 @@ export default function AdminApplicationsPage() {
       ) : (
         <div className="space-y-2.5 min-w-0">
           {filtered.map((app) => (
-            <div
+            <Link
               key={app.id}
-              onClick={() => setSelected(app)}
+              href={`/admin/applications/${app.id}`}
               className="w-full text-left bg-white rounded-2xl border border-slate-200 p-3 sm:p-4 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 cursor-pointer group min-w-0 overflow-hidden"
             >
               <div className="flex items-center gap-3 min-w-0 w-full sm:w-auto">
@@ -154,98 +153,8 @@ export default function AdminApplicationsPage() {
                   View details <ArrowRight className="w-3.5 h-3.5" />
                 </span>
               </div>
-            </div>
+            </Link>
           ))}
-        </div>
-      )}
-
-      {/* Application Detail Modal */}
-      {selected && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm p-0 sm:p-3 overflow-x-hidden">
-          <div className="bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl max-w-lg w-full max-h-[92vh] flex flex-col overflow-hidden min-w-0">
-            <div className="flex items-start justify-between gap-3 p-4 sm:p-5 border-b border-slate-100 bg-[#081630] text-white min-w-0">
-              <div className="flex items-center gap-3 min-w-0 flex-1">
-                <div className="w-10 h-10 rounded-full bg-[#EE7862] text-white flex items-center justify-center font-bold text-base shadow-md shrink-0">
-                  {initials(selected)}
-                </div>
-                <div className="min-w-0">
-                  <h2 className="font-bold text-base text-white leading-tight truncate">
-                    {selected.firstName} {selected.lastName}
-                  </h2>
-                  <p className="text-xs text-[#00F0ED] font-semibold truncate">{selected.position || "Caregiver Applicant"}</p>
-                </div>
-              </div>
-              <button onClick={() => setSelected(null)} className="text-slate-400 hover:text-white p-1 rounded-lg shrink-0">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="p-4 sm:p-5 space-y-3 overflow-y-auto overflow-x-hidden flex-1 min-w-0">
-              <DetailRow icon={User} label="Applicant Name" value={`${selected.firstName} ${selected.lastName}`} />
-              <DetailRow icon={Mail} label="Email Address" value={selected.email} href={`mailto:${selected.email}`} />
-              <DetailRow icon={Phone} label="Phone Number" value={selected.phone} href={`tel:${selected.phone}`} />
-              <DetailRow icon={Briefcase} label="Position Interested In" value={selected.position || "General Application"} />
-              <DetailRow icon={Calendar} label="Date Submitted" value={formatDate(selected.createdAt)} />
-
-              <div className="pt-1 min-w-0">
-                <p className="field-label">Experience & Cover Message</p>
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-700 whitespace-pre-wrap break-words leading-relaxed">
-                  {selected.message?.trim() || "No additional notes provided."}
-                </div>
-              </div>
-
-              <div className="pt-1 min-w-0">
-                <p className="field-label">Background Check Consent</p>
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-700">
-                  {selected.backgroundCheckConsent ? `Granted${selected.backgroundCheckConsentAt ? ` on ${formatDate(selected.backgroundCheckConsentAt)}` : ""}` : "Not granted"}
-                </div>
-              </div>
-
-              <div className="pt-1 min-w-0">
-                <p className="field-label">Resume</p>
-                {selected.resumeDataUrl ? (
-                  <button
-                    onClick={() => downloadResume(selected)}
-                    className="w-full text-left bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-[#081630] hover:bg-slate-100 transition-colors"
-                  >
-                    {selected.resumeName || "Download resume"}
-                  </button>
-                ) : (
-                  <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs sm:text-sm text-slate-500">
-                    No resume uploaded.
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="p-3 sm:p-4 border-t border-slate-100 bg-slate-50 flex flex-col sm:flex-row gap-2 min-w-0">
-              <button
-                onClick={downloadBackgroundCheckForm}
-                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0"
-              >
-                <Mail className="w-4 h-4" /> BG Check Form
-              </button>
-              <a
-                href={`mailto:${selected.email}`}
-                className="btn-primary flex-1 justify-center text-xs sm:text-sm min-w-0 bg-[#081630] hover:bg-[#1d2a41]"
-              >
-                <Mail className="w-4 h-4" /> Email Candidate
-              </a>
-              <a
-                href={`tel:${selected.phone}`}
-                className="btn-ghost flex-1 justify-center text-xs sm:text-sm bg-white border border-slate-200 hover:bg-slate-100 min-w-0"
-              >
-                <Phone className="w-4 h-4 text-emerald-600" /> Call Candidate
-              </a>
-              <button
-                onClick={() => setDeleteId(selected.id)}
-                className="p-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-all border border-red-200 cursor-pointer shrink-0 self-center sm:self-auto"
-                title="Delete Application"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
         </div>
       )}
 

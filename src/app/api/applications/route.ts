@@ -80,7 +80,12 @@ export async function POST(req: Request) {
         await sendViaResend({
           to: [applicantEmail],
           subject: "We received your application — Pack Home Health Care",
-          html: buildApplicationConfirmHtml({ name, position: doc.position }),
+          html: buildApplicationConfirmHtml({
+            name,
+            position: doc.position,
+            backgroundCheckUrl: `${siteUrl()}/packhome_Background_Check.pdf`,
+            returnDays: 3,
+          }),
           replyTo: agencyInbox(),
         });
       } catch (mailErr) {
