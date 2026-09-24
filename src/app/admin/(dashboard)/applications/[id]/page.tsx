@@ -95,16 +95,26 @@ export default function ApplicationDetailPage() {
 
   return (
     <>
-      <div className="mb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="min-w-0">
-          <Link href="/admin/applications" className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[#EE7862] mb-2">
-            <ArrowLeft className="w-4 h-4" /> Back to applications
+      <div className="fixed top-0 left-0 right-0 z-40 border-b border-slate-200 bg-white/95 shadow-sm backdrop-blur sm:left-64">
+        <div className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
+          <Link href="/admin/applications" className="inline-flex shrink-0 items-center gap-2 text-sm font-semibold text-slate-600 transition-colors hover:text-[#EE7862]">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">Back to applications</span>
+            <span className="sm:hidden">Back</span>
           </Link>
-          <h1 className="font-bold text-xl text-[#081630]">Applicant Details</h1>
+          <div className="min-w-0 text-right">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Applicant</p>
+            <h1 className="truncate text-sm font-bold text-[#081630] sm:text-base">{app.firstName} {app.lastName}</h1>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-w-0">
+      <div className="pt-20">
+        <div className="mb-4">
+          <h2 className="font-bold text-xl text-[#081630]">Applicant Details</h2>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden min-w-0">
         <div className="bg-[#081630] text-white p-4 sm:p-5 flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-[#EE7862] text-white flex items-center justify-center font-bold text-lg shrink-0">
             {initials(app)}
@@ -193,12 +203,13 @@ export default function ApplicationDetailPage() {
             <Trash2 className="w-4 h-4" />
           </button>
         </div>
+        </div>
       </div>
 
       {deleteId && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 backdrop-blur-sm p-3 overflow-x-hidden">
           <div className="bg-white rounded-2xl shadow-2xl p-5 sm:p-6 max-w-sm w-full text-center relative min-w-0 overflow-hidden">
-            <button onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700">
+            <button disabled={busy} onClick={() => setDeleteId(null)} className="absolute top-4 right-4 text-slate-400 hover:text-slate-700 disabled:cursor-not-allowed disabled:opacity-50">
               <X className="w-4 h-4" />
             </button>
             <div className="w-12 h-12 rounded-full bg-red-100 text-red-500 flex items-center justify-center mx-auto mb-4">
@@ -207,10 +218,11 @@ export default function ApplicationDetailPage() {
             <h3 className="font-bold text-lg text-[#081630] mb-2">Delete application?</h3>
             <p className="text-slate-500 text-xs sm:text-sm mb-6">This candidate record will be permanently deleted. This action cannot be undone.</p>
             <div className="flex gap-3 justify-center">
-              <button disabled={busy} onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex-1">
-                Delete
+              <button disabled={busy} onClick={handleDelete} className="bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-2.5 rounded-xl text-sm transition-colors disabled:opacity-50 flex-1 inline-flex items-center justify-center gap-2">
+                {busy ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <Trash2 className="w-4 h-4" />}
+                {busy ? "Deleting..." : "Delete"}
               </button>
-              <button onClick={() => setDeleteId(null)} className="btn-ghost flex-1">Cancel</button>
+              <button disabled={busy} onClick={() => setDeleteId(null)} className="btn-ghost flex-1 disabled:cursor-not-allowed disabled:opacity-50">Cancel</button>
             </div>
           </div>
         </div>
