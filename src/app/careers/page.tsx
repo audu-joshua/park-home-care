@@ -79,6 +79,12 @@ export default function CareersPage() {
       email: fd.get("email")?.toString() || "",
       position: fd.get("position")?.toString() || selectedPos || "",
       message: fd.get("message")?.toString() || "",
+      referee1Name: fd.get("referee1Name")?.toString() || "",
+      referee1Business: fd.get("referee1Business")?.toString() || "",
+      referee1Phone: fd.get("referee1Phone")?.toString() || "",
+      referee2Name: fd.get("referee2Name")?.toString() || "",
+      referee2Business: fd.get("referee2Business")?.toString() || "",
+      referee2Phone: fd.get("referee2Phone")?.toString() || "",
       backgroundCheckConsent,
     };
     if (!payload.position) {

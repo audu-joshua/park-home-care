@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { agencyInbox, sendAdminInboxNotice, sendViaResend, siteUrl } from "@/lib/mail";
 import { buildApplicationConfirmHtml, buildInboxHtml } from "@/lib/inboxEmail";
-import { deleteResume, getResumeDownloadUrl, uploadResume } from "@/lib/r2";
+import { deleteResume, getResumeDownloadUrl, getResumeViewUrl, uploadResume } from "@/lib/r2";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +28,10 @@ export async function GET() {
       if (typeof application.resumeKey === "string" && application.resumeKey) {
         try {
           application.resumeDownloadUrl = await getResumeDownloadUrl(
+            application.resumeKey,
+            String(application.resumeName || "resume"),
+          );
+          application.resumeViewUrl = await getResumeViewUrl(
             application.resumeKey,
             String(application.resumeName || "resume"),
           );

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Mail, Phone, Briefcase, Calendar, User, ArrowLeft, Download, Trash2, X } from "lucide-react";
+import { Mail, Phone, Briefcase, Calendar, User, ArrowLeft, Download, ExternalLink, Trash2, X } from "lucide-react";
 import { fetchApplications, deleteApplicationRemote, type JobApplication } from "@/lib/store";
 
 function formatDate(value: string) {
@@ -158,11 +158,21 @@ export default function ApplicationDetailPage() {
 
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
             <p className="field-label">Resume</p>
-            {app.resumeDownloadUrl || app.resumeDataUrl ? (
-              <button onClick={downloadResume} className="inline-flex items-center gap-2 text-sm font-semibold text-[#081630] hover:text-[#EE7862] transition-colors">
-                <Download className="w-4 h-4" />
-                {app.resumeName || "Download resume"}
-              </button>
+            {(app.resumeViewUrl || app.resumeDownloadUrl || app.resumeDataUrl) ? (
+              <div className="flex flex-wrap items-center gap-3 mt-2">
+                <a
+                  href={app.resumeViewUrl || app.resumeDataUrl || app.resumeDownloadUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-primary inline-flex text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" /> View resume
+                </a>
+                <button onClick={downloadResume} className="btn-ghost inline-flex text-sm">
+                  <Download className="w-4 h-4" /> Download resume
+                </button>
+                <span className="text-xs text-slate-500">{app.resumeName || "Resume"}</span>
+              </div>
             ) : (
               <p className="text-sm text-slate-500">No resume uploaded.</p>
             )}

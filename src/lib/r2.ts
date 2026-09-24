@@ -33,10 +33,18 @@ export async function uploadResume(key: string, body: Uint8Array, contentType: s
 }
 
 export async function getResumeDownloadUrl(key: string, fileName: string) {
+  return getResumeUrl(key, `attachment; filename="${fileName.replace(/"/g, "")}"`);
+}
+
+export async function getResumeViewUrl(key: string, fileName: string) {
+  return getResumeUrl(key, "inline");
+}
+
+async function getResumeUrl(key: string, contentDisposition: string) {
   return getSignedUrl(requireClient(), new GetObjectCommand({
     Bucket: bucketName,
     Key: key,
-    ResponseContentDisposition: `attachment; filename="${fileName.replace(/"/g, "")}"`,
+    ResponseContentDisposition: contentDisposition,
   }), { expiresIn: 900 });
 }
 

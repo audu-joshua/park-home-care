@@ -43,6 +43,7 @@ export interface JobApplication {
   resumeName?: string;
   resumeDataUrl?: string;
   resumeDownloadUrl?: string;
+  resumeViewUrl?: string;
   resumeKey?: string;
   createdAt: string;
 }
