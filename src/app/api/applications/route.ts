@@ -58,6 +58,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ ok: false, error: "Resume must be smaller than 5MB" }, { status: 400 });
     }
 
+    const requiredFields = [
+      "firstName", "lastName", "email", "phone", "position",
+      "referee1Name", "referee1Business", "referee1Phone",
+      "referee2Name", "referee2Business", "referee2Phone",
+    ];
+    const missingFields = requiredFields.filter((field) => !String(form.get(field) || "").trim());
+    if (missingFields.length > 0) {
+      return NextResponse.json({
+        ok: false,
+        error: "Please provide both complete referee details before submitting.",
+        missingFields,
+      }, { status: 400 });
+    }
+
     const id = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
     const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
     const resumeKey = `applications/${id}/${safeName || "resume"}`;
