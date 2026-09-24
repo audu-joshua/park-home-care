@@ -42,9 +42,9 @@ export default function ApplicationDetailPage() {
   }, [params.id]);
 
   const downloadResume = () => {
-    if (!app?.resumeDataUrl) return;
+    if (!app?.resumeDownloadUrl && !app?.resumeDataUrl) return;
     const link = document.createElement("a");
-    link.href = app.resumeDataUrl;
+    link.href = app.resumeDownloadUrl || app.resumeDataUrl || "";
     link.download = app.resumeName || `${app.firstName || "candidate"}-${app.lastName || "resume"}.pdf`;
     document.body.appendChild(link);
     link.click();
@@ -138,8 +138,27 @@ export default function ApplicationDetailPage() {
           </div>
 
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
+            <p className="field-label">Character References</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2">
+              {[1, 2].map((number) => {
+                const name = app[`referee${number}Name` as keyof JobApplication] as string | undefined;
+                const business = app[`referee${number}Business` as keyof JobApplication] as string | undefined;
+                const phone = app[`referee${number}Phone` as keyof JobApplication] as string | undefined;
+                return (
+                  <div key={number} className="rounded-lg border border-slate-200 bg-white p-3">
+                    <p className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Reference {number}</p>
+                    <p className="text-sm font-semibold text-[#081630]">{name || "Not provided"}</p>
+                    <p className="text-sm text-slate-600">{business || "Business not provided"}</p>
+                    {phone ? <a href={`tel:${phone}`} className="text-sm font-semibold text-[#EE7862] hover:underline">{phone}</a> : <p className="text-sm text-slate-500">Phone not provided</p>}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-slate-200 bg-slate-50 p-3">
             <p className="field-label">Resume</p>
-            {app.resumeDataUrl ? (
+            {app.resumeDownloadUrl || app.resumeDataUrl ? (
               <button onClick={downloadResume} className="inline-flex items-center gap-2 text-sm font-semibold text-[#081630] hover:text-[#EE7862] transition-colors">
                 <Download className="w-4 h-4" />
                 {app.resumeName || "Download resume"}

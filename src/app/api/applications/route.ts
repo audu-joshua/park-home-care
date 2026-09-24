@@ -3,10 +3,11 @@ import { ObjectId } from "mongodb";
 import { getDb } from "@/lib/mongodb";
 import { agencyInbox, sendAdminInboxNotice, sendViaResend, siteUrl } from "@/lib/mail";
 import { buildApplicationConfirmHtml, buildInboxHtml } from "@/lib/inboxEmail";
+import { deleteResume, getResumeDownloadUrl, uploadResume } from "@/lib/r2";
 
 export const dynamic = "force-dynamic";
 
-function serialize(doc: Record<string, unknown> & { _id?: ObjectId }) {
+function serialize(doc: Record<string, unknown> & { _id?: ObjectId }): Record<string, unknown> & { id: string; createdAt: string } {
   const { _id, ...rest } = doc;
   const createdAt = rest.createdAt instanceof Date
     ? rest.createdAt.toISOString()
@@ -22,7 +23,21 @@ export async function GET() {
   try {
     const db = await getDb();
     const rows = await db.collection("applications").find({}).sort({ createdAt: -1 }).toArray();
-    return NextResponse.json(rows.map((row) => serialize(row as Record<string, unknown> & { _id?: ObjectId })));
+    const applications = await Promise.all(rows.map(async (row) => {
+      const application = serialize(row as Record<string, unknown> & { _id?: ObjectId });
+      if (typeof application.resumeKey === "string" && application.resumeKey) {
+        try {
+          application.resumeDownloadUrl = await getResumeDownloadUrl(
+            application.resumeKey,
+            String(application.resumeName || "resume"),
+          );
+        } catch (err) {
+          console.error("Resume download URL generation failed:", err);
+        }
+      }
+      return application;
+    }));
+    return NextResponse.json(applications);
   } catch (err) {
     return NextResponse.json({ ok: false, error: (err as Error).message }, { status: 500 });
   }
@@ -30,22 +45,41 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const form = await req.formData();
+    const file = form.get("resume");
+    if (!(file instanceof File) || !file.size) {
+      return NextResponse.json({ ok: false, error: "Resume is required" }, { status: 400 });
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json({ ok: false, error: "Resume must be smaller than 5MB" }, { status: 400 });
+    }
+
+    const id = `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const resumeKey = `applications/${id}/${safeName || "resume"}`;
+    await uploadResume(resumeKey, new Uint8Array(await file.arrayBuffer()), file.type || "application/octet-stream");
+
     const db = await getDb();
     const col = db.collection("applications");
-    const consent = Boolean(body.backgroundCheckConsent);
+    const consent = form.get("backgroundCheckConsent") === "true";
     const doc = {
-      id: `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`,
-      firstName: body.firstName || "",
-      lastName: body.lastName || "",
-      email: body.email || "",
-      phone: body.phone || "",
-      position: body.position || "",
-      message: body.message || "",
+      id,
+      firstName: String(form.get("firstName") || ""),
+      lastName: String(form.get("lastName") || ""),
+      email: String(form.get("email") || ""),
+      phone: String(form.get("phone") || ""),
+      position: String(form.get("position") || ""),
+      message: String(form.get("message") || ""),
+      referee1Name: String(form.get("referee1Name") || ""),
+      referee1Business: String(form.get("referee1Business") || ""),
+      referee1Phone: String(form.get("referee1Phone") || ""),
+      referee2Name: String(form.get("referee2Name") || ""),
+      referee2Business: String(form.get("referee2Business") || ""),
+      referee2Phone: String(form.get("referee2Phone") || ""),
       backgroundCheckConsent: consent,
       backgroundCheckConsentAt: consent ? new Date() : null,
-      resumeName: body.resumeName || "",
-      resumeDataUrl: body.resumeDataUrl || "",
+      resumeName: file.name || "resume",
+      resumeKey,
       createdAt: new Date(),
     };
     await col.insertOne(doc);
@@ -105,9 +139,17 @@ export async function DELETE(req: Request) {
     if (!id) return NextResponse.json({ ok: false, error: "Missing id" }, { status: 400 });
     const db = await getDb();
     const col = db.collection("applications");
+    const existing = await col.findOne({ $or: [{ id }, ...(ObjectId.isValid(id) ? [{ _id: new ObjectId(id) }] : [])] });
     const byCustomId = await col.deleteOne({ id });
     if (byCustomId.deletedCount === 0 && ObjectId.isValid(id)) {
       await col.deleteOne({ _id: new ObjectId(id) });
+    }
+    if (existing?.resumeKey) {
+      try {
+        await deleteResume(String(existing.resumeKey));
+      } catch (err) {
+        console.error("Resume deletion failed:", err);
+      }
     }
     return NextResponse.json({ ok: true });
   } catch (err) {

@@ -40,9 +40,9 @@ export default function AdminApplicationsPage() {
   };
 
   const downloadResume = (app: JobApplication) => {
-    if (!app.resumeDataUrl) return;
+    if (!app.resumeDownloadUrl && !app.resumeDataUrl) return;
     const link = document.createElement("a");
-    link.href = app.resumeDataUrl;
+    link.href = app.resumeDownloadUrl || app.resumeDataUrl || "";
     link.download = app.resumeName || `${app.firstName || "candidate"}-${app.lastName || "resume"}.pdf`;
     link.click();
   };

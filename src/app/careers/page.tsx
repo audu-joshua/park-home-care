@@ -65,13 +65,6 @@ export default function CareersPage() {
     formRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const readFileAsDataUrl = (file: File) => new Promise<string>((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result || ""));
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsDataURL(file);
-  });
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (submitting) return;
@@ -107,15 +100,12 @@ export default function CareersPage() {
 
     setSubmitting(true);
     try {
-      const resumeDataUrl = await readFileAsDataUrl(file);
+      const formData = new FormData();
+      Object.entries(payload).forEach(([key, value]) => formData.append(key, String(value)));
+      formData.append("resume", file);
       const res = await fetch("/api/applications", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...payload,
-          resumeName: file.name || "resume.pdf",
-          resumeDataUrl,
-        }),
+        body: formData,
       });
       if (res.ok) {
         setSubmitted(true);
@@ -324,6 +314,23 @@ export default function CareersPage() {
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-2">Brief Summary of Experience</label>
                   <textarea name="message" rows={4} placeholder="Tell us briefly about your caregiving experience and availability..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm"></textarea>
+                </div>
+
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-bold text-[#081630]">Professional References</h3>
+                    <p className="text-xs text-slate-500 mt-1">Please provide two people we may contact to discuss your character.</p>
+                  </div>
+                  {[1, 2].map((number) => (
+                    <div key={number} className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3">
+                      <p className="text-xs font-bold text-slate-700 uppercase tracking-wider">Reference {number}</p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input name={`referee${number}Name`} required type="text" placeholder="Full name" aria-label={`Reference ${number} name`} className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm" />
+                        <input name={`referee${number}Business`} required type="text" placeholder="Business or organization" aria-label={`Reference ${number} business`} className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#EE7862] text-sm" />
+                      </div>
+                      <UsPhoneInput name={`referee${number}Phone`} required aria-label={`Reference ${number} phone`} className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white focus:outline-none focus:ring-2 focus:ring-[#EE7862]" />
+                    </div>
+                  ))}
                 </div>
 
                 <div className="space-y-4">

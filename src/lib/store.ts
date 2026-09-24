@@ -32,10 +32,18 @@ export interface JobApplication {
   phone: string;
   position: string;
   message: string;
+  referee1Name?: string;
+  referee1Business?: string;
+  referee1Phone?: string;
+  referee2Name?: string;
+  referee2Business?: string;
+  referee2Phone?: string;
   backgroundCheckConsent: boolean;
   backgroundCheckConsentAt?: string;
   resumeName?: string;
   resumeDataUrl?: string;
+  resumeDownloadUrl?: string;
+  resumeKey?: string;
   createdAt: string;
 }
 
