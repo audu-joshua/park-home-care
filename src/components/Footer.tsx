@@ -1,4 +1,5 @@
 import React from "react";
+import { ArrowUpRight } from "lucide-react";
 import Logo from "./Logo";
 
 export default function Footer() {
@@ -173,9 +174,10 @@ export default function Footer() {
                 href="https://audujoshua.com/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-bold text-[#00F0ED] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00F0ED]"
+                className="inline-flex items-center gap-1 font-bold text-[#00F0ED] underline decoration-[#EE7862] decoration-2 underline-offset-4 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00F0ED]"
               >
                 Audu Services
+                <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5" />
               </a>
             </p>
           </div>
