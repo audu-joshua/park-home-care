@@ -165,7 +165,20 @@ export default function Footer() {
               Admin Portal
             </a>
           </div>
-          <p>© 2026 Pack Home Health Care Agency LLC. All rights reserved.</p>
+          <div className="flex flex-col items-center sm:items-end gap-2 text-center sm:text-right">
+            <p>© 2026 Pack Home Health Care Agency LLC. All rights reserved.</p>
+            <p>
+              Designed &amp; Developed by{" "}
+              <a
+                href="https://audujoshua.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold text-[#00F0ED] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#00F0ED]"
+              >
+                Audu Services
+              </a>
+            </p>
+          </div>
         </div>
 
       </div>
